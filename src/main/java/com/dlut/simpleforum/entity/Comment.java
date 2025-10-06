@@ -88,4 +88,20 @@ public abstract class Comment {
 	}
 
 	public abstract List<? extends Comment> getReplies();
+
+	public void addLikes() {
+		++likes;
+	}
+
+	public void decreaseLikes() {
+		--likes;
+	}
+
+	public void addDislikes() {
+		++dislikes;
+	}
+
+	public void decreaseDislikes() {
+		--dislikes;
+	}
 }
