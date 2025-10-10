@@ -6,26 +6,24 @@ import lombok.Getter;
 public enum ApiCode {
 
 	// 2000
-	OK(2000, "OK"),
+	OK(2000),
 	// 4000
-	FAILURE(4000, "FAILURE");
+	FAILURE(4000);
 
-	private static final String MESSAGE_PREFIX = "api.response.";
+	private static final String MESSAGE_PREFIX = "api.";
 
-	private final Integer apiCode;
-	private final String code;
+	private final Integer code;
 
-	ApiCode(Integer apiCode, String code) {
-		this.apiCode = apiCode;
+	ApiCode(Integer code) {
 		this.code = code;
 	}
 
 	public boolean isSuccess() {
-		return apiCode >= 2000 && apiCode < 3000;
+		return code >= 2000 && code < 3000;
 	}
 
 	public String getMessageCode() {
-		return MESSAGE_PREFIX + code.toLowerCase();
+		return MESSAGE_PREFIX + code.toString();
 	}
 
 }

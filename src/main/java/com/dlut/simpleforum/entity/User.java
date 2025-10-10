@@ -70,12 +70,13 @@ public class User {
 
 	public enum UserRole {
 		MEMBER, // 普通成员
-		ADMIN // 管理员
+		ADMIN, // 管理员
+		GUEST // 游客
 	}
 
 	public enum UserStatus {
 		ACTIVE, // 活跃
-		OFFLINE,
+		OFFLINE, // 下线
 		BLOCKED // 被封禁
 	}
 

@@ -3,6 +3,7 @@ package com.dlut.simpleforum.entity;
 import java.time.LocalDateTime; // 导入时间处理类
 import java.util.List;
 
+import jakarta.persistence.CheckConstraint;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -20,7 +21,10 @@ import jakarta.validation.constraints.Size;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-@Table(name = "comments")
+@Table(name = "comments", check = {
+		@CheckConstraint(name = "comment_chk_content", constraint = "LENGTH(content) BETWEEN 1 AND 128"),
+		@CheckConstraint(name = "comment_chk_positive", constraint = "likes >= 0 AND dislikes >= 0")
+})
 public abstract class Comment {
 
 	@Id

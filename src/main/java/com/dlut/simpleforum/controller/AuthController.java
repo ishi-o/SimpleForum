@@ -1,5 +1,7 @@
 package com.dlut.simpleforum.controller;
 
+import java.util.UUID;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,6 +15,7 @@ import com.dlut.simpleforum.dto.request.UserAuthRequest;
 import com.dlut.simpleforum.dto.response.ApiResponse;
 import com.dlut.simpleforum.dto.response.UserLoginResponse;
 import com.dlut.simpleforum.entity.User;
+import com.dlut.simpleforum.entity.User.UserRole;
 import com.dlut.simpleforum.service.UserService;
 
 import jakarta.servlet.http.HttpSession;
@@ -60,4 +63,11 @@ public class AuthController {
 		return ApiResponse.success();
 	}
 
+	@PostMapping("/guest")
+	public ApiResponse<String> guest(HttpSession session) {
+		String guestId = "guest_" + UUID.randomUUID();
+		session.setAttribute("userId", guestId);
+		session.setAttribute("userRole", UserRole.GUEST);
+		return ApiResponse.success(guestId);
+	}
 }

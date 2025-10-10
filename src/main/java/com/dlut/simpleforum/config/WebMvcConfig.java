@@ -6,13 +6,16 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.dlut.simpleforum.interceptor.AuthInterceptor;
+import com.dlut.simpleforum.interceptor.PermissionInterceptor;
 
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
 	private final AuthInterceptor authInterceptor;
+	private final PermissionInterceptor permissionInteceptor;
 
-	public WebMvcConfig(AuthInterceptor authInterceptor) {
+	public WebMvcConfig(AuthInterceptor authInterceptor, PermissionInterceptor permissionInterceptor) {
 		this.authInterceptor = authInterceptor;
+		this.permissionInteceptor = permissionInterceptor;
 	}
 
 	@Override
@@ -22,7 +25,14 @@ public class WebMvcConfig implements WebMvcConfigurer {
 				.excludePathPatterns(
 						"/auth/**",
 						"/error")
-				.order(0);
+				.order(1);
+		registry.addInterceptor(permissionInteceptor)
+				.addPathPatterns("/**")
+				.excludePathPatterns(
+						"/auth/**",
+						"/public/**",
+						"/error")
+				.order(2);
 	}
 
 	@Override

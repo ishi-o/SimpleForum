@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.persistence.CheckConstraint;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -21,7 +22,10 @@ import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 
 @Entity
-@Table(name = "posts")
+@Table(name = "posts", check = {
+		@CheckConstraint(name = "post_chk_title", constraint = "title REGEXP '^[0-9a-zA-Z\u4e00-\u9fff]{2,10}$'"),
+		@CheckConstraint(name = "post_chk_content", constraint = "LENGTH(content) <= 4096")
+})
 public class Post {
 
 	@Id
