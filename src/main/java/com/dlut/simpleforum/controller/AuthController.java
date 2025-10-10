@@ -34,7 +34,7 @@ public class AuthController {
 	public ApiResponse<Void> register(
 			@Valid @RequestBody UserAuthRequest userRegisterRequest) {
 		userService.register(userRegisterRequest.getUsername(), userRegisterRequest.getPassword());
-		return ApiResponse.success(Void.class);
+		return ApiResponse.success();
 	}
 
 	@PostMapping("/login")
@@ -57,7 +57,7 @@ public class AuthController {
 	@PostMapping("/logout")
 	public ApiResponse<Void> logout(@SessionAttribute("userId") Long uid) {
 		userService.logout(uid);
-		return ApiResponse.success(Void.class);
+		return ApiResponse.success();
 	}
 
 }
