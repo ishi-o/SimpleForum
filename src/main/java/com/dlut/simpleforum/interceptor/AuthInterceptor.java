@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import com.dlut.simpleforum.dto.response.ApiResponse;
+import com.dlut.simpleforum.dto.response.ErrorResponse;
 import com.dlut.simpleforum.util.MessageSourceUtils;
 import com.dlut.simpleforum.util.ObjectMapperUtils;
 
@@ -27,9 +28,13 @@ public class AuthInterceptor implements HandlerInterceptor {
 			response.setStatus(HttpStatus.UNAUTHORIZED.value());
 			response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 			response.getWriter()
-					.write(ObjectMapperUtils
-							.writeValueAsString(ApiResponse.of(Void.class, HttpStatus.UNAUTHORIZED.toString(),
-									MessageSourceUtils.getMessage("error.unauthorized", null, request.getLocale()))));
+					.write(ObjectMapperUtils.writeValueAsString(
+							ApiResponse.failure(
+									ErrorResponse
+											.builder()
+											.message(MessageSourceUtils.getMessage("error.unauthorized", null,
+													request.getLocale()))
+											.build())));
 			return false;
 		}
 		return true;

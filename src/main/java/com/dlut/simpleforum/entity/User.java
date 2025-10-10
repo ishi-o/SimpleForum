@@ -19,7 +19,7 @@ import lombok.Getter;
 @Getter
 @Entity
 @Table(name = "users", check = {
-		@CheckConstraint(name = "user_chk_name", constraint = "name REGEXP '^[0-9a-zA-Z_\\u4e00-\\u9fff]{2,10}$'"),
+		@CheckConstraint(name = "user_chk_name", constraint = "name REGEXP '^[0-9a-zA-Z_\u4e00-\u9fff]{2,10}$'"),
 		@CheckConstraint(name = "user_chk_pwd", constraint = "password REGEXP '^(?=.*[0-9].*)(?=.*[a-z].*)(?=.*[A-Z].*)(?=.*[~!@#$%&*()_+=-].*)[0-9a-zA-Z~!@#$%&*()_+=-]{8,16}$'")
 }, uniqueConstraints = {
 		@UniqueConstraint(name = "user_uniq_name", columnNames = { "name" })
