@@ -26,7 +26,7 @@ import jakarta.validation.constraints.Size;
 @Table(name = "boards", uniqueConstraints = {
 		@UniqueConstraint(name = "board_uniq_name", columnNames = { "name" })
 }, check = {
-		@CheckConstraint(name = "board_chk_name", constraint = "name REGEXP '^[0-9a-zA-Z\\u4e00-\\u9fff]{2,16}$'"),
+		@CheckConstraint(name = "board_chk_name", constraint = "name REGEXP '^[0-9a-zA-Z\u4e00-\u9fff]{2,16}$'"),
 		@CheckConstraint(name = "board_chk_descrip", constraint = "LENGTH(description) <= 40")
 })
 public class Board {
