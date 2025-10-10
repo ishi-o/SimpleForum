@@ -1,5 +1,7 @@
 package com.dlut.simpleforum.service.impl;
 
+import java.util.Optional;
+
 import org.springframework.stereotype.Service;
 
 import com.dlut.simpleforum.entity.User;
@@ -22,7 +24,12 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public void register(String username, String password) {
-		userRepository.save(new User(username, password));
+		Optional<User> userOpt = userRepository.findByName(username);
+		if (userOpt.isPresent()) {
+			throw new IllegalArgumentException(MessageSourceUtils.getMessage("error.user.duplicate", null));
+		} else {
+			userRepository.save(new User(username, password));
+		}
 	}
 
 	@Override

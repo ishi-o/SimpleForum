@@ -1,5 +1,7 @@
 package com.dlut.simpleforum.controller;
 
+import java.sql.SQLException;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
@@ -30,8 +32,8 @@ public class ExceptionHandlerController {
 	}
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	@ExceptionHandler({ IllegalArgumentException.class })
-	public ApiResponse<ErrorResponse> handleIllegalArgumentException(IllegalArgumentException e) {
+	@ExceptionHandler({ IllegalArgumentException.class, SQLException.class })
+	public ApiResponse<ErrorResponse> handleIllegalArgumentException(Exception e) {
 		return ApiResponse.failure(
 				ErrorResponse
 						.builder()

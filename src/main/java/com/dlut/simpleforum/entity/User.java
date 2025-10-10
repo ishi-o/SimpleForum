@@ -65,7 +65,7 @@ public class User {
 		this.password = password;
 		this.role = UserRole.MEMBER;
 		this.createdAt = LocalDateTime.now();
-		this.status = UserStatus.BLOCKED;
+		this.status = UserStatus.OFFLINE;
 	}
 
 	public enum UserRole {

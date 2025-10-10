@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.SessionAttribute;
 
 import com.dlut.simpleforum.dto.request.UserAuthRequest;
 import com.dlut.simpleforum.dto.response.ApiResponse;
@@ -17,6 +16,7 @@ import com.dlut.simpleforum.dto.response.UserLoginResponse;
 import com.dlut.simpleforum.entity.User;
 import com.dlut.simpleforum.entity.User.UserRole;
 import com.dlut.simpleforum.service.UserService;
+import com.dlut.simpleforum.util.MessageSourceUtils;
 
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -52,14 +52,20 @@ public class AuthController {
 				UserLoginResponse.builder()
 						.uid(user.getUid())
 						.username(user.getName())
+						.role(user.getRole())
 						.createdAt(user.getCreatedAt())
 						.need2FA(false)
 						.build());
 	}
 
 	@PostMapping("/logout")
-	public ApiResponse<Void> logout(@SessionAttribute("userId") Long uid) {
-		userService.logout(uid);
+	public ApiResponse<Void> logout(HttpSession session) {
+		if (session.getAttribute("userId") == null) {
+			throw new IllegalArgumentException(MessageSourceUtils.getMessage("error.user.offline", null));
+		}
+		userService.logout((Long) session.getAttribute("userId"));
+		session.removeAttribute("userId");
+		session.removeAttribute("userRole");
 		return ApiResponse.success();
 	}
 
