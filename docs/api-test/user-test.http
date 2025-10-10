@@ -1,0 +1,29 @@
+@host=http://localhost:8000/api
+@version=HTTP/1.1
+@type-json=Content-Type: application/json
+
+POST {{host}}/auth/register {{version}}
+{{type-json}}
+
+{
+	"username": "ishio",
+	"password": "Aa1!bbbb"
+}
+
+###
+POST {{host}}/auth/login {{version}}
+{{type-json}}
+
+{
+	"username": "ishio",
+	"password": "Aa1!bbbb"
+}
+
+###
+POST {{host}}/auth/logout {{version}}
+{{type-json}}
+
+
+###
+POST {{host}}/auth/guest {{version}}
+{{type-json}}
