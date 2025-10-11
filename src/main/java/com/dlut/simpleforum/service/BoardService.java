@@ -1,0 +1,17 @@
+package com.dlut.simpleforum.service;
+
+import org.springframework.data.domain.Slice;
+import org.springframework.stereotype.Service;
+
+import com.dlut.simpleforum.entity.Board;
+
+/**
+ * @author Ishi_O
+ * @since
+ */
+@Service
+public interface BoardService {
+	Slice<Board> getAllBoards(Integer pageNumber, Integer pageSize);
+
+	Board getSpecifiedBoard(Long bid);
+}

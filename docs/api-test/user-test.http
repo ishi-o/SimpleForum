@@ -27,3 +27,24 @@ POST {{host}}/auth/logout {{version}}
 ###
 POST {{host}}/auth/guest {{version}}
 {{type-json}}
+
+###
+{{host}}/boards
+
+###
+{{host}}/boards?page=1&size=100
+
+###
+{{host}}/boards/1000000006
+
+###
+{{host}}/boards/1000000006/posts
+
+###
+{{host}}/boards/1000000006/posts/6
+
+###
+{{host}}/boards/1000000006/posts/6/comments
+
+###
+{{host}}/boards/1000000006/posts/6/comments/2

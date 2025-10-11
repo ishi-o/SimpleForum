@@ -32,8 +32,12 @@ public class WebMvcConfig implements WebMvcConfigurer {
 		registry.addInterceptor(permissionInteceptor)
 				.addPathPatterns("/**")
 				.excludePathPatterns(
-						"/auth/**",
-						"/public/**",
+						"/auth/register",
+						"/auth/login",
+						"/auth/guest",
+						"/boards",
+						"/boards/{bid:\\d+}",
+						"/boards/{bid:\\d+}/posts",
 						"/error")
 				.order(2);
 	}

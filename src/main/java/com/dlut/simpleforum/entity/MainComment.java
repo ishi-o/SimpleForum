@@ -23,6 +23,9 @@ public class MainComment extends Comment {
 	@OneToMany(mappedBy = "parent")
 	private final List<SubComment> replies = new ArrayList<>();
 
+	public MainComment() {
+	}
+
 	public MainComment(String content, User author, Post post) {
 		super(content, author);
 		this.post = post;

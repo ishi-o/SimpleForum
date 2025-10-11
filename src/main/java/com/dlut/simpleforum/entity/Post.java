@@ -77,6 +77,9 @@ public class Post {
 	@OneToMany(mappedBy = "cid")
 	private List<MainComment> comments = new ArrayList<>();
 
+	public Post() {
+	}
+
 	public Post(String title, String content, User author, Board board) {
 		this.title = title;
 		this.content = content;

@@ -3,7 +3,6 @@ package com.dlut.simpleforum.controller;
 import java.util.UUID;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,7 +20,6 @@ import com.dlut.simpleforum.util.MessageSourceUtils;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
-@Controller
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
@@ -71,9 +69,12 @@ public class AuthController {
 
 	@PostMapping("/guest")
 	public ApiResponse<String> guest(HttpSession session) {
-		String guestId = "guest_" + UUID.randomUUID();
-		session.setAttribute("userId", guestId);
-		session.setAttribute("userRole", UserRole.GUEST);
+		String guestId = (String) session.getAttribute("userId");
+		if (guestId == null) {
+			guestId = "guest_" + UUID.randomUUID();
+			session.setAttribute("userId", guestId);
+			session.setAttribute("userRole", UserRole.GUEST);
+		}
 		return ApiResponse.success(guestId);
 	}
 }
