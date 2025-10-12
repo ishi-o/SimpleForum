@@ -48,3 +48,25 @@ POST {{host}}/auth/guest {{version}}
 
 ###
 {{host}}/boards/1000000006/posts/6/comments/2
+
+###
+POST {{host}}/boards {{version}}
+{{type-json}}
+
+{
+	"name": "你好",
+	"description": "这是介绍"
+}
+
+###
+PUT {{host}}/boards/1000000051 {{version}}
+{{type-json}}
+
+{
+	"name": "你好呀",
+	"description": "这是介绍喵！",
+	"moderatorUid": 2
+}
+
+###
+{{host}}/boards/1000000051

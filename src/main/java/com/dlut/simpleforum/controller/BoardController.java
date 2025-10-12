@@ -4,15 +4,21 @@ import java.util.List;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.SessionAttribute;
 
+import com.dlut.simpleforum.dto.request.BoardCreateRequest;
 import com.dlut.simpleforum.dto.response.ApiResponse;
 import com.dlut.simpleforum.dto.response.BoardDto;
 import com.dlut.simpleforum.entity.Board;
 import com.dlut.simpleforum.service.BoardService;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 
@@ -42,6 +48,30 @@ public class BoardController {
 	@GetMapping("/{bid}")
 	public ApiResponse<BoardDto> getSpecifiedBoard(@PathVariable Long bid) {
 		Board board = boardService.getSpecifiedBoard(bid);
+		return ApiResponse.success(BoardDto.createBoardDto(board));
+	}
+
+	@PostMapping
+	public ApiResponse<BoardDto> createBoard(
+			@Valid @RequestBody BoardCreateRequest boardCreateRequest,
+			@SessionAttribute("userId") Long uid) {
+		Board board = boardService.createBoard(boardCreateRequest.getName(),
+				boardCreateRequest.getDescription(),
+				boardCreateRequest.getModeratorUid() == null ? uid : boardCreateRequest.getModeratorUid());
+		return ApiResponse.success(BoardDto.createBoardDto(board));
+	}
+
+	@PutMapping("/{bid}")
+	public ApiResponse<BoardDto> updateBoard(
+			@Valid @RequestBody BoardCreateRequest boardCreateRequest,
+			@PathVariable Long bid,
+			@SessionAttribute("userId") Long uid) {
+		Board board = boardService.updateBoard(
+				boardCreateRequest.getName(),
+				boardCreateRequest.getDescription(),
+				bid,
+				boardCreateRequest.getModeratorUid(),
+				uid);
 		return ApiResponse.success(BoardDto.createBoardDto(board));
 	}
 }

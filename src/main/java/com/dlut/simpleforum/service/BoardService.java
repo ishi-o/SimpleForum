@@ -14,4 +14,8 @@ public interface BoardService {
 	Slice<Board> getAllBoards(Integer pageNumber, Integer pageSize);
 
 	Board getSpecifiedBoard(Long bid);
+
+	Board createBoard(String name, String description, Long uid);
+
+	Board updateBoard(String name, String description, Long bid, Long uid, Long editorUid);
 }
