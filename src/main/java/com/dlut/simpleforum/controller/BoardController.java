@@ -17,7 +17,9 @@ import com.dlut.simpleforum.dto.request.BoardCreateRequest;
 import com.dlut.simpleforum.dto.response.ApiResponse;
 import com.dlut.simpleforum.dto.response.BoardDto;
 import com.dlut.simpleforum.entity.Board;
+import com.dlut.simpleforum.entity.User.UserRole;
 import com.dlut.simpleforum.service.BoardService;
+import com.dlut.simpleforum.util.PermissionUtils;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
@@ -55,7 +57,14 @@ public class BoardController {
 	@PostMapping
 	public ApiResponse<BoardDto> createBoard(
 			@Valid @RequestBody BoardCreateRequest boardCreateRequest,
-			@SessionAttribute("userId") Long uid) {
+			@SessionAttribute("userId") Long uid,
+			@SessionAttribute("userRole") UserRole role) {
+		Long moderatorUid = boardCreateRequest.getModeratorUid();
+		if (moderatorUid == null) {
+			moderatorUid = uid;
+		} else if (!moderatorUid.equals(uid)) {
+			PermissionUtils.isNotRoleThenThrow(UserRole.ADMIN, role);
+		}
 		Board board = boardService.createBoard(boardCreateRequest.getName(),
 				boardCreateRequest.getDescription(),
 				boardCreateRequest.getModeratorUid() == null ? uid : boardCreateRequest.getModeratorUid());
@@ -66,21 +75,24 @@ public class BoardController {
 	public ApiResponse<BoardDto> updateBoard(
 			@Valid @RequestBody BoardCreateRequest boardCreateRequest,
 			@PathVariable Long bid,
-			@SessionAttribute("userId") Long uid) {
+			@SessionAttribute("userId") Long editorUid,
+			@SessionAttribute("userRole") UserRole editorRole) {
 		Board board = boardService.updateBoard(
+				bid,
 				boardCreateRequest.getName(),
 				boardCreateRequest.getDescription(),
-				bid,
 				boardCreateRequest.getModeratorUid(),
-				uid);
+				editorUid,
+				editorRole);
 		return ApiResponse.success(BoardDto.createBoardDto(board));
 	}
 
 	@DeleteMapping("/{bid}")
 	public ApiResponse<Void> deleteBoard(
 			@PathVariable Long bid,
-			@SessionAttribute("userId") Long uid) {
-		boardService.deleteBoard(bid, uid);
+			@SessionAttribute("userId") Long editorUid,
+			@SessionAttribute("userRole") UserRole editorRole) {
+		boardService.deleteBoard(bid, editorUid, editorRole);
 		return ApiResponse.success();
 	}
 }

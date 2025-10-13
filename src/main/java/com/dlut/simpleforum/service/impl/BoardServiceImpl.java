@@ -5,11 +5,12 @@ import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 
 import com.dlut.simpleforum.entity.Board;
-import com.dlut.simpleforum.entity.User;
+import com.dlut.simpleforum.entity.User.UserRole;
 import com.dlut.simpleforum.repository.BoardRepository;
 import com.dlut.simpleforum.repository.UserRepository;
 import com.dlut.simpleforum.service.BoardService;
 import com.dlut.simpleforum.util.MessageSourceUtils;
+import com.dlut.simpleforum.util.PermissionUtils;
 
 import jakarta.transaction.Transactional;
 
@@ -48,32 +49,25 @@ public class BoardServiceImpl implements BoardService {
 	}
 
 	@Override
-	public Board updateBoard(String name, String description, Long bid, Long uid, Long editorUid) {
+	public Board updateBoard(Long bid, String name, String description, Long uid, Long editorUid, UserRole userRole) {
 		Board board = boardRepository.findById(bid).orElseThrow(
 				() -> new IllegalArgumentException(MessageSourceUtils.getMessage("error.board.not-found", null)));
-		User editor = userRepository.findById(editorUid).orElseThrow(
-				() -> new IllegalArgumentException(MessageSourceUtils.getMessage("error.user.not-found", null)));
-		board.checkPermission(editor);
+		if (!board.getModerator().getUid().equals(editorUid)) {
+			PermissionUtils.isNotRoleThenThrow(UserRole.ADMIN, userRole);
+		}
 		board.setName(name);
 		board.setDescription(description);
-		if (!uid.equals(editorUid)) {
-			board.setModerator(
-					// userRepository.findById(uid).orElseThrow(
-					// () -> new
-					// IllegalArgumentException(MessageSourceUtils.getMessage("error.user.not-found",
-					// null)))
-					userRepository.getReferenceById(uid));
-		}
+		board.setModerator(userRepository.getReferenceById(uid));
 		return board;
 	}
 
 	@Override
-	public void deleteBoard(Long bid, Long editorUid) {
+	public void deleteBoard(Long bid, Long editorUid, UserRole editorRole) {
 		Board board = boardRepository.findById(bid).orElseThrow(
 				() -> new IllegalArgumentException(MessageSourceUtils.getMessage("error.board.not-found", null)));
-		User editor = userRepository.findById(editorUid).orElseThrow(
-				() -> new IllegalArgumentException(MessageSourceUtils.getMessage("error.user.not-found", null)));
-		board.checkPermission(editor);
+		if (!board.getModerator().getUid().equals(editorUid)) {
+			PermissionUtils.isNotRoleThenThrow(UserRole.ADMIN, editorRole);
+		}
 		boardRepository.deleteById(bid);
 	}
 }

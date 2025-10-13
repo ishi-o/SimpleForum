@@ -60,7 +60,7 @@ POST {{host}}/boards {{version}}
 }
 
 ###
-PUT {{host}}/boards/1000000054 {{version}}
+PUT {{host}}/boards/1000000055 {{version}}
 {{type-json}}
 
 {
@@ -70,7 +70,7 @@ PUT {{host}}/boards/1000000054 {{version}}
 }
 
 ###
-{{host}}/boards/1000000052
+{{host}}/boards/1000000055
 
 ###
-DELETE {{host}}/boards/1000000054 {{version}}
+DELETE {{host}}/boards/1000000055 {{version}}

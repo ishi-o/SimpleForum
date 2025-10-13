@@ -4,6 +4,7 @@ import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 
 import com.dlut.simpleforum.entity.Board;
+import com.dlut.simpleforum.entity.User.UserRole;
 
 /**
  * @author Ishi_O
@@ -17,7 +18,7 @@ public interface BoardService {
 
 	Board createBoard(String name, String description, Long uid);
 
-	Board updateBoard(String name, String description, Long bid, Long uid, Long editorUid);
+	Board updateBoard(Long bid, String name, String description, Long uid, Long editorUid, UserRole userRole);
 
-	void deleteBoard(Long bid, Long editorUid);
+	void deleteBoard(Long bid, Long editorUid, UserRole editorRole);
 }

@@ -19,7 +19,7 @@ import jakarta.servlet.http.HttpSession;
  * @since
  */
 @Component
-public class AuthInterceptor implements HandlerInterceptor {
+public class AuthenticationInterceptor implements HandlerInterceptor {
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
@@ -32,8 +32,7 @@ public class AuthInterceptor implements HandlerInterceptor {
 							ApiResponse.failure(
 									ErrorResponse
 											.builder()
-											.message(MessageSourceUtils.getMessage("http.401", null,
-													request.getLocale()))
+											.message(MessageSourceUtils.getMessage("http.401", null))
 											.build())));
 			return false;
 		}
