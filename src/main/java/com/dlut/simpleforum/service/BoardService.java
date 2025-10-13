@@ -18,4 +18,6 @@ public interface BoardService {
 	Board createBoard(String name, String description, Long uid);
 
 	Board updateBoard(String name, String description, Long bid, Long uid, Long editorUid);
+
+	void deleteBoard(Long bid, Long editorUid);
 }

@@ -66,4 +66,14 @@ public class BoardServiceImpl implements BoardService {
 		}
 		return board;
 	}
+
+	@Override
+	public void deleteBoard(Long bid, Long editorUid) {
+		Board board = boardRepository.findById(bid).orElseThrow(
+				() -> new IllegalArgumentException(MessageSourceUtils.getMessage("error.board.not-found", null)));
+		User editor = userRepository.findById(editorUid).orElseThrow(
+				() -> new IllegalArgumentException(MessageSourceUtils.getMessage("error.user.not-found", null)));
+		board.checkPermission(editor);
+		boardRepository.deleteById(bid);
+	}
 }

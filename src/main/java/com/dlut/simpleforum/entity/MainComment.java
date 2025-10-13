@@ -3,6 +3,7 @@ package com.dlut.simpleforum.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -20,7 +21,7 @@ public class MainComment extends Comment {
 	@ManyToOne(optional = false)
 	private Post post;
 
-	@OneToMany(mappedBy = "parent")
+	@OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
 	private final List<SubComment> replies = new ArrayList<>();
 
 	public MainComment() {

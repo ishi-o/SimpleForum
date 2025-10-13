@@ -2,6 +2,7 @@ package com.dlut.simpleforum.controller;
 
 import java.util.List;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -73,5 +74,13 @@ public class BoardController {
 				boardCreateRequest.getModeratorUid(),
 				uid);
 		return ApiResponse.success(BoardDto.createBoardDto(board));
+	}
+
+	@DeleteMapping("/{bid}")
+	public ApiResponse<Void> deleteBoard(
+			@PathVariable Long bid,
+			@SessionAttribute("userId") Long uid) {
+		boardService.deleteBoard(bid, uid);
+		return ApiResponse.success();
 	}
 }

@@ -6,7 +6,7 @@ POST {{host}}/auth/register {{version}}
 {{type-json}}
 
 {
-	"username": "ishio",
+	"username": "ishioi",
 	"password": "Aa1!bbbb"
 }
 
@@ -55,11 +55,12 @@ POST {{host}}/boards {{version}}
 
 {
 	"name": "你好",
-	"description": "这是介绍"
+	"description": "这是介绍",
+	"moderatorUid": 1
 }
 
 ###
-PUT {{host}}/boards/1000000051 {{version}}
+PUT {{host}}/boards/1000000054 {{version}}
 {{type-json}}
 
 {
@@ -69,4 +70,7 @@ PUT {{host}}/boards/1000000051 {{version}}
 }
 
 ###
-{{host}}/boards/1000000051
+{{host}}/boards/1000000052
+
+###
+DELETE {{host}}/boards/1000000054 {{version}}

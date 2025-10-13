@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.CheckConstraint;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -74,7 +75,7 @@ public class Post {
 	@ManyToOne(optional = false)
 	private Board board;
 
-	@OneToMany(mappedBy = "cid")
+	@OneToMany(mappedBy = "cid", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<MainComment> comments = new ArrayList<>();
 
 	public Post() {
