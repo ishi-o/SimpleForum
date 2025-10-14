@@ -23,6 +23,13 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	public User getUser(Long uid) {
+		return userRepository.findById(uid)
+				.orElseThrow(() -> new IllegalArgumentException(
+						MessageSourceUtils.getMessage("error.user.not-found", null)));
+	}
+
+	@Override
 	public void register(String username, String password) {
 		Optional<User> userOpt = userRepository.findByName(username);
 		if (userOpt.isPresent()) {

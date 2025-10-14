@@ -7,6 +7,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 import com.dlut.simpleforum.dto.response.ApiResponse;
 import com.dlut.simpleforum.dto.response.ErrorResponse;
+import com.dlut.simpleforum.entity.User.UserRole;
 import com.dlut.simpleforum.util.MessageSourceUtils;
 import com.dlut.simpleforum.util.ObjectMapperUtils;
 
@@ -24,7 +25,9 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
 		HttpSession session = request.getSession(false);
-		if (session == null || session.getAttribute("userId") == null) {
+		if (session == null || session.getAttribute("userId") == null
+				|| (UserRole.GUEST.equals(session.getAttribute("userRole"))
+						&& "/auth/me".equals(request.getServletPath()))) {
 			response.setStatus(HttpStatus.UNAUTHORIZED.value());
 			response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 			response.getWriter()

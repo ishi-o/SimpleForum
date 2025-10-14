@@ -3,15 +3,17 @@ package com.dlut.simpleforum.controller;
 import java.util.UUID;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.SessionAttribute;
 
 import com.dlut.simpleforum.dto.request.UserAuthRequest;
 import com.dlut.simpleforum.dto.response.ApiResponse;
-import com.dlut.simpleforum.dto.response.UserLoginResponse;
+import com.dlut.simpleforum.dto.response.UserDto;
 import com.dlut.simpleforum.entity.User;
 import com.dlut.simpleforum.entity.User.UserRole;
 import com.dlut.simpleforum.service.UserService;
@@ -30,6 +32,13 @@ public class AuthController {
 		this.userService = userService;
 	}
 
+	@GetMapping("/me")
+	public ApiResponse<UserDto> getMe(
+			@SessionAttribute("userId") Long uid) {
+		User user = userService.getUser(uid);
+		return ApiResponse.success(UserDto.createUserDtoByUser(user));
+	}
+
 	@ResponseStatus(HttpStatus.CREATED)
 	@PostMapping("/register")
 	public ApiResponse<Void> register(
@@ -39,21 +48,14 @@ public class AuthController {
 	}
 
 	@PostMapping("/login")
-	public ApiResponse<UserLoginResponse> login(
+	public ApiResponse<UserDto> login(
 			@Valid @RequestBody UserAuthRequest userAuthRequest,
 			HttpSession session) {
 		User user = userService.login(userAuthRequest.getUsername(),
 				userAuthRequest.getPassword());
 		session.setAttribute("userId", user.getUid());
 		session.setAttribute("userRole", user.getRole());
-		return ApiResponse.success(
-				UserLoginResponse.builder()
-						.uid(user.getUid())
-						.username(user.getName())
-						.role(user.getRole())
-						.createdAt(user.getCreatedAt())
-						.need2FA(false)
-						.build());
+		return ApiResponse.success(UserDto.createUserDtoByUser(user));
 	}
 
 	@PostMapping("/logout")

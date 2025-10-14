@@ -32,6 +32,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 		registry.addInterceptor(guestGetInterceptor)
 				.addPathPatterns("/**")
 				.excludePathPatterns(
+						"/auth/me",
 						"/auth/login",
 						"/auth/register",
 						"/auth/guest",

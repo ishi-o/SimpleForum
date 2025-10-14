@@ -1,5 +1,8 @@
 package com.dlut.simpleforum.service.impl;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
@@ -33,6 +36,13 @@ public class BoardServiceImpl implements BoardService {
 	@Override
 	public Slice<Board> getAllBoards(Integer pageNumber, Integer pageSize) {
 		return boardRepository.findAll(PageRequest.of(pageNumber, pageSize));
+	}
+
+	@Override
+	public Slice<Board> getLikelyBoards(List<String> keywords, Integer pageNumber, Integer pageSize) {
+		String keywordPattern = keywords.stream().collect(Collectors.joining("%"));
+		return boardRepository.findByNameOrDescriptionContaining(keywordPattern,
+				PageRequest.of(pageNumber, pageSize));
 	}
 
 	@Override

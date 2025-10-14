@@ -32,6 +32,9 @@ POST {{host}}/auth/guest {{version}}
 {{host}}/boards
 
 ###
+{{host}}/boards?q=A
+
+###
 {{host}}/boards?page=1&size=100
 
 ###

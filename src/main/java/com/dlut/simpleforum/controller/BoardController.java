@@ -41,8 +41,14 @@ public class BoardController {
 	@GetMapping
 	public ApiResponse<List<BoardDto>> getAllBoards(
 			@RequestParam(name = "page", defaultValue = "0") @PositiveOrZero Integer pageNumber,
-			@RequestParam(name = "size", defaultValue = "10") @Positive Integer pageSize) {
-		List<Board> boards = boardService.getAllBoards(pageNumber, pageSize).getContent();
+			@RequestParam(name = "size", defaultValue = "10") @Positive Integer pageSize,
+			@RequestParam(name = "q", required = false) String question) {
+		List<Board> boards;
+		if (question != null) {
+			boards = boardService.getLikelyBoards(List.of(question.split(" ")), pageNumber, pageSize).getContent();
+		} else {
+			boards = boardService.getAllBoards(pageNumber, pageSize).getContent();
+		}
 		return ApiResponse.success(boards.stream().map(
 				board -> BoardDto.createBoardDto(board))
 				.toList());
