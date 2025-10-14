@@ -33,6 +33,9 @@ public class SubComment extends Comment {
 		this.target = target;
 	}
 
+	public SubComment() {
+	}
+
 	public MainComment getParent() {
 		return parent;
 	}

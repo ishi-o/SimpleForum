@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.dlut.simpleforum.entity.User.UserRole;
+import com.dlut.simpleforum.util.MessageSourceUtils;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.CheckConstraint;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -17,10 +19,6 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PastOrPresent;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "boards", uniqueConstraints = {
@@ -36,28 +34,20 @@ public class Board {
 	@Column(name = "bid")
 	private Long bid;
 
-	@NotNull
-	@Size(min = 2, max = 16, message = "validation.board.name.size")
-	@Pattern(regexp = "^[0-9a-zA-Z\\u4e00-\\u9fff]+$", message = "{validation.board.name.pattern}")
 	@Column(name = "name", length = 20, nullable = false)
 	private String name;
 
-	@NotNull
-	@Size(max = 40, message = "{validation.board.description.size}")
 	@Column(name = "description", length = 50)
 	private String description;
 
-	@NotNull
 	@ManyToOne(optional = false)
 	@JoinColumn(name = "moderator_id", referencedColumnName = "uid")
 	private User moderator;
 
-	@NotNull
-	@PastOrPresent
 	@Column(name = "created_at")
 	private LocalDateTime createdAt;
 
-	@OneToMany(mappedBy = "board")
+	@OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Post> posts = new ArrayList<>();
 
 	public Board() {
@@ -102,11 +92,13 @@ public class Board {
 		this.name = name;
 	}
 
-	public void changeModerator(User newModerator, User editor) {
-		if (editor.getRole().equals(UserRole.ADMIN) || editor.getUid().equals(moderator.getUid())) {
-			moderator = newModerator;
-		} else {
-			throw new IllegalArgumentException("编辑者权限不足");
+	public void setModerator(User newModerator) {
+		moderator = newModerator;
+	}
+
+	public void checkPermission(User editor) {
+		if (!editor.getRole().equals(UserRole.ADMIN) && !editor.getUid().equals(moderator.getUid())) {
+			throw new IllegalArgumentException(MessageSourceUtils.getMessage("error.editor.no-permission", null));
 		}
 	}
 }

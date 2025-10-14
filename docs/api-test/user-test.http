@@ -6,7 +6,7 @@ POST {{host}}/auth/register {{version}}
 {{type-json}}
 
 {
-	"username": "ishio",
+	"username": "ishioi",
 	"password": "Aa1!bbbb"
 }
 
@@ -27,3 +27,53 @@ POST {{host}}/auth/logout {{version}}
 ###
 POST {{host}}/auth/guest {{version}}
 {{type-json}}
+
+###
+{{host}}/boards
+
+###
+{{host}}/boards?q=A
+
+###
+{{host}}/boards?page=1&size=100
+
+###
+{{host}}/boards/1000000006
+
+###
+{{host}}/boards/1000000006/posts
+
+###
+{{host}}/boards/1000000006/posts/6
+
+###
+{{host}}/boards/1000000006/posts/6/comments
+
+###
+{{host}}/boards/1000000006/posts/6/comments/2
+
+###
+POST {{host}}/boards {{version}}
+{{type-json}}
+
+{
+	"name": "你好",
+	"description": "这是介绍",
+	"moderatorUid": 1
+}
+
+###
+PUT {{host}}/boards/1000000055 {{version}}
+{{type-json}}
+
+{
+	"name": "你好呀",
+	"description": "这是介绍喵！",
+	"moderatorUid": 2
+}
+
+###
+{{host}}/boards/1000000055
+
+###
+DELETE {{host}}/boards/1000000055 {{version}}

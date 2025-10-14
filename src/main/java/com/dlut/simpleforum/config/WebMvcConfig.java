@@ -5,17 +5,17 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import com.dlut.simpleforum.interceptor.AuthInterceptor;
-import com.dlut.simpleforum.interceptor.PermissionInterceptor;
+import com.dlut.simpleforum.interceptor.AuthenticationInterceptor;
+import com.dlut.simpleforum.interceptor.GuestGetInterceptor;
 
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
-	private final AuthInterceptor authInterceptor;
-	private final PermissionInterceptor permissionInteceptor;
+	private final AuthenticationInterceptor authInterceptor;
+	private final GuestGetInterceptor guestGetInterceptor;
 
-	public WebMvcConfig(AuthInterceptor authInterceptor, PermissionInterceptor permissionInterceptor) {
+	public WebMvcConfig(AuthenticationInterceptor authInterceptor, GuestGetInterceptor guestGetInterceptor) {
 		this.authInterceptor = authInterceptor;
-		this.permissionInteceptor = permissionInterceptor;
+		this.guestGetInterceptor = guestGetInterceptor;
 	}
 
 	@Override
@@ -29,11 +29,13 @@ public class WebMvcConfig implements WebMvcConfigurer {
 						"/auth/guest",
 						"/error")
 				.order(1);
-		registry.addInterceptor(permissionInteceptor)
+		registry.addInterceptor(guestGetInterceptor)
 				.addPathPatterns("/**")
 				.excludePathPatterns(
-						"/auth/**",
-						"/public/**",
+						"/auth/me",
+						"/auth/login",
+						"/auth/register",
+						"/auth/guest",
 						"/error")
 				.order(2);
 	}
