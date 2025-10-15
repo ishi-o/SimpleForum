@@ -29,7 +29,6 @@ public class GuestGetInterceptor implements HandlerInterceptor {
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
 		String requestPath = request.getServletPath();
-		System.out.println(requestPath);
 		if (!("GET".equals(request.getMethod())
 				&& excludeGetPaths
 						.stream()

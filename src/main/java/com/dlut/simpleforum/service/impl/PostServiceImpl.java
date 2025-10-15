@@ -2,6 +2,8 @@ package com.dlut.simpleforum.service.impl;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Order;
 import org.springframework.stereotype.Service;
 
 import com.dlut.simpleforum.entity.Post;
@@ -26,7 +28,8 @@ public class PostServiceImpl implements PostService {
 
 	@Override
 	public Slice<Post> getAllPostsByBoardId(Long bid, Integer pageNumber, Integer pageSize) {
-		return postRepository.findAllByBoardBid(bid, PageRequest.of(pageNumber, pageSize));
+		return postRepository.findAllByBoardBid(bid, PageRequest.of(pageNumber, pageSize,
+				Sort.by(Order.desc("isPinned"), Order.desc("likes"), Order.desc("createdAt"))));
 	}
 
 	@Override

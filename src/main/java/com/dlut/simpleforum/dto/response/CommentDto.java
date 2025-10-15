@@ -21,6 +21,8 @@ public class CommentDto {
 
 	private Long authorId;
 
+	private String authorName;
+
 	private LocalDateTime createdAt;
 
 	private Integer likes;
@@ -33,6 +35,7 @@ public class CommentDto {
 		return builder()
 				.cid(comment.getCid())
 				.authorId(comment.getAuthor().getUid())
+				.authorName(comment.getAuthor().getName())
 				.content(comment.getContent())
 				.createdAt(comment.getCreatedAt())
 				.likes(comment.getLikes())
@@ -45,6 +48,7 @@ public class CommentDto {
 		return builder()
 				.cid(subComment.getCid())
 				.authorId(subComment.getAuthor().getUid())
+				.authorName(subComment.getAuthor().getName())
 				.content(subComment.getContent())
 				.createdAt(subComment.getCreatedAt())
 				.likes(subComment.getLikes())
