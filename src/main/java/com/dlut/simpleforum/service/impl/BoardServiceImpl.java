@@ -46,6 +46,11 @@ public class BoardServiceImpl implements BoardService {
 	}
 
 	@Override
+	public Slice<Board> getBoardsByUid(Long uid, Integer pageNumber, Integer pageSize) {
+		return boardRepository.findAllByModeratorUid(uid, PageRequest.of(pageNumber, pageSize));
+	}
+
+	@Override
 	public Board getSpecifiedBoard(Long bid) {
 		return boardRepository.findById(bid).orElseThrow(
 				() -> new IllegalArgumentException(MessageSourceUtils.getMessage("error.board.not-found", null)));

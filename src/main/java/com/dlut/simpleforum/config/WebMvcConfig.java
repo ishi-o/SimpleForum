@@ -39,6 +39,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 						"/auth/register",
 						"/auth/guest",
 						"/error")
+				.excludeHttpMethods(HttpMethod.OPTIONS)
 				.order(2);
 	}
 

@@ -16,11 +16,6 @@ import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PastOrPresent;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.PositiveOrZero;
-import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "posts", check = {
@@ -34,43 +29,29 @@ public class Post {
 	@Column(name = "pid")
 	private Long pid;
 
-	@NotNull
-	@Size(min = 2, max = 10, message = "{validation.post.title.size}")
-	@Pattern(regexp = "^[0-9a-zA-Z\\u4e00-\\u9fff]+$", message = "{validation.post.title.pattern}")
 	@Column(name = "title")
 	private String title;
 
-	@NotNull
-	@Size(max = 4096, message = "{validation.post.content.size}")
 	@Lob
 	@Column(name = "content")
 	private String content;
 
-	@NotNull
-	@PastOrPresent
 	@Column(name = "created_at", updatable = false)
 	private LocalDateTime createdAt;
 
-	@NotNull
 	@Column(name = "pinned")
 	private Boolean isPinned;
 
-	@NotNull
-	@PositiveOrZero
 	@Column(name = "likes")
 	private Integer likes;
 
-	@NotNull
-	@PositiveOrZero
 	@Column(name = "dislikes")
 	private Integer dislikes;
 
-	@NotNull
 	@JoinColumn(name = "author_id", referencedColumnName = "uid", updatable = false)
 	@ManyToOne(optional = false)
 	private User author;
 
-	@NotNull
 	@JoinColumn(name = "board_id", referencedColumnName = "bid", updatable = false)
 	@ManyToOne(optional = false)
 	private Board board;
@@ -157,5 +138,9 @@ public class Post {
 
 	public void decreseDislikes() {
 		--dislikes;
+	}
+
+	public void trigglePin() {
+		isPinned = !isPinned;
 	}
 }

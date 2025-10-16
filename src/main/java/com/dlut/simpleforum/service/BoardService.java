@@ -18,6 +18,8 @@ public interface BoardService {
 
 	Slice<Board> getLikelyBoards(List<String> keywords, Integer pageNumber, Integer pageSize);
 
+	Slice<Board> getBoardsByUid(Long uid, Integer pageNumber, Integer pageSize);
+
 	Board getSpecifiedBoard(Long bid);
 
 	Board createBoard(String name, String description, Long uid);

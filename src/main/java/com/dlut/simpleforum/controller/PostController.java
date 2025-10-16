@@ -5,10 +5,14 @@ import java.util.List;
 import org.springframework.data.domain.Slice;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.SessionAttribute;
 
+import com.dlut.simpleforum.dto.request.PostCreateRequest;
 import com.dlut.simpleforum.dto.response.ApiResponse;
 import com.dlut.simpleforum.dto.response.PostDto;
 import com.dlut.simpleforum.entity.Post;
@@ -47,6 +51,16 @@ public class PostController {
 			@PathVariable Long pid,
 			@PathVariable Long bid) {
 		Post post = postService.getSpecifiedPostByBoardId(pid, bid);
+		return ApiResponse.success(PostDto.createPostDto(post));
+	}
+
+	@PostMapping
+	public ApiResponse<PostDto> createPost(
+			@RequestBody PostCreateRequest postCreateRequest,
+			@PathVariable Long bid,
+			@SessionAttribute("userId") Long uid) {
+		Post post = postService.createPostByBoardId(bid, uid, postCreateRequest.getTitle(),
+				postCreateRequest.getContent());
 		return ApiResponse.success(PostDto.createPostDto(post));
 	}
 
