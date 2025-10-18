@@ -49,7 +49,8 @@ public class BoardController {
 			@RequestParam(name = "q", required = false) String question) {
 		List<Board> boards;
 		if (question != null) {
-			boards = boardService.getLikelyBoards(List.of(question.split(" ")), pageNumber, pageSize).getContent();
+			boards = boardService.getLikelyBoards(List.of(question.split(" ")), pageNumber, pageSize)
+					.getContent();
 		} else {
 			boards = boardService.getAllBoards(pageNumber, pageSize).getContent();
 		}

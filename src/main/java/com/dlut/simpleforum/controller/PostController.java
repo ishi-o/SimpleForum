@@ -2,7 +2,6 @@ package com.dlut.simpleforum.controller;
 
 import java.util.List;
 
-import org.springframework.data.domain.Slice;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,6 +14,7 @@ import org.springframework.web.bind.annotation.SessionAttribute;
 import com.dlut.simpleforum.dto.request.PostCreateRequest;
 import com.dlut.simpleforum.dto.response.ApiResponse;
 import com.dlut.simpleforum.dto.response.PostDto;
+import com.dlut.simpleforum.dto.result.PageResult;
 import com.dlut.simpleforum.entity.Post;
 import com.dlut.simpleforum.service.PostService;
 
@@ -39,8 +39,9 @@ public class PostController {
 			@PathVariable Long bid,
 			@RequestParam(name = "page", defaultValue = "0") @PositiveOrZero Integer pageNumber,
 			@RequestParam(name = "size", defaultValue = "10") @Positive Integer pageSize) {
-		Slice<Post> posts = postService.getAllPostsByBoardId(bid, pageNumber, pageSize);
-		return ApiResponse.success(posts.getContent()
+		PageResult<Post> posts = postService.getAllPostsByBoardId(bid, pageNumber, pageSize);
+		return ApiResponse.success(posts
+				.getContent()
 				.stream()
 				.map(post -> PostDto.createPostDto(post))
 				.toList());

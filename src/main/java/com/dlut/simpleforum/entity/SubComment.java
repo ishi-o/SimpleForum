@@ -3,6 +3,8 @@ package com.dlut.simpleforum.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -24,6 +26,7 @@ public class SubComment extends Comment {
 	@ManyToOne
 	private SubComment target;
 
+	@JsonIgnore
 	@OneToMany(mappedBy = "target")
 	private final List<SubComment> replies = new ArrayList<>();
 

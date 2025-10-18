@@ -51,6 +51,7 @@ public class CommentController {
 			@RequestParam(name = "size", defaultValue = "10") @Positive Integer pageSize) {
 		return ApiResponse.success(commentService
 				.getSpecifiedSubComments(bid, pid, cid, pageNumber, pageSize)
+				.getContent()
 				.stream()
 				.map(subComment -> CommentDto.createSubCommentDto(subComment))
 				.toList());
