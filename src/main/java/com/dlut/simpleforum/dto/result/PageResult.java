@@ -1,7 +1,7 @@
 package com.dlut.simpleforum.dto.result;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 import org.springframework.data.domain.Page;
 
@@ -18,21 +18,50 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class PageResult<T> {
 	private List<T> content;
-	private int pageNumber;
-	private int pageSize;
-	private long totalElements;
-	private int totalPages;
-	private boolean first;
-	private boolean last;
+
+	private Integer pageNumber;
+
+	private Integer pageSize;
+
+	private Long totalElements;
+
+	private Integer totalPages;
+
+	private Boolean first;
+
+	private Boolean last;
 
 	public static <T> PageResult<T> from(Page<T> page) {
 		return new PageResult<>(
-				new ArrayList<>(page.getContent()),
+				page.getContent(),
 				page.getNumber(),
 				page.getSize(),
 				page.getTotalElements(),
 				page.getTotalPages(),
 				page.isFirst(),
 				page.isLast());
+	}
+
+	public static <T> PageResult<T> of(List<T> content, Integer pageNumber, Integer pageSize, Long totalElements,
+			Integer totalPages) {
+		return new PageResult<>(
+				content,
+				pageNumber,
+				pageSize,
+				totalElements,
+				totalPages,
+				pageNumber == 0,
+				pageNumber + 1 == totalPages);
+	}
+
+	public static <T, S> PageResult<T> from(PageResult<S> pageResult, Function<S, T> mapper) {
+		return new PageResult<>(
+				pageResult.content.stream().map(mapper).toList(),
+				pageResult.pageNumber,
+				pageResult.pageSize,
+				pageResult.totalElements,
+				pageResult.totalPages,
+				pageResult.first,
+				pageResult.last);
 	}
 }
