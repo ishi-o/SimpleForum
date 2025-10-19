@@ -5,26 +5,24 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.ForeignKey;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "main_comments")
 @PrimaryKeyJoinColumn(name = "cid")
 public class MainComment extends Comment {
-	@NotNull
-	@JoinColumn(name = "post_id", referencedColumnName = "pid")
+	@JoinColumn(name = "post_id", referencedColumnName = "pid", foreignKey = @ForeignKey(name = "fk_comment_post", foreignKeyDefinition = "FOREIGN KEY (post_id) REFERENCES posts(pid) ON DELETE CASCADE"))
 	@ManyToOne(optional = false)
 	private Post post;
 
 	@JsonIgnore
-	@OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "parent")
 	private final List<SubComment> replies = new ArrayList<>();
 
 	public MainComment() {

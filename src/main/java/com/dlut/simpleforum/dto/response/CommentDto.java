@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 import com.dlut.simpleforum.entity.Comment;
 import com.dlut.simpleforum.entity.SubComment;
+import com.dlut.simpleforum.entity.User;
 
 import lombok.Builder;
 import lombok.Data;
@@ -31,6 +32,10 @@ public class CommentDto {
 
 	private Long targetId;
 
+	private Long targetAuthorId;
+
+	private String targetAuthorName;
+
 	public static CommentDto createMainCommentDto(Comment comment) {
 		return builder()
 				.cid(comment.getCid())
@@ -41,10 +46,21 @@ public class CommentDto {
 				.likes(comment.getLikes())
 				.dislikes(comment.getDislikes())
 				.targetId(null)
+				.targetAuthorId(null)
+				.targetAuthorName(null)
 				.build();
 	}
 
 	public static CommentDto createSubCommentDto(SubComment subComment) {
+		SubComment target = subComment.getTarget();
+		Long targetId, targetAuthorId = targetId = null;
+		String targetAuthorName = null;
+		if (target != null) {
+			targetId = target.getCid();
+			User author = target.getAuthor();
+			targetAuthorId = author.getUid();
+			targetAuthorName = author.getName();
+		}
 		return builder()
 				.cid(subComment.getCid())
 				.authorId(subComment.getAuthor().getUid())
@@ -53,7 +69,9 @@ public class CommentDto {
 				.createdAt(subComment.getCreatedAt())
 				.likes(subComment.getLikes())
 				.dislikes(subComment.getDislikes())
-				.targetId(subComment.getTarget() == null ? null : subComment.getTarget().getCid())
+				.targetId(targetId)
+				.targetAuthorId(targetAuthorId)
+				.targetAuthorName(targetAuthorName)
 				.build();
 	}
 }

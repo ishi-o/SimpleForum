@@ -12,10 +12,11 @@ import org.springframework.stereotype.Service;
 
 import com.dlut.simpleforum.dto.result.PageResult;
 import com.dlut.simpleforum.entity.Board;
+import com.dlut.simpleforum.entity.User;
 import com.dlut.simpleforum.entity.User.UserRole;
 import com.dlut.simpleforum.repository.BoardRepository;
-import com.dlut.simpleforum.repository.UserRepository;
 import com.dlut.simpleforum.service.BoardService;
+import com.dlut.simpleforum.util.EntityReferenceUtils;
 import com.dlut.simpleforum.util.MessageSourceUtils;
 import com.dlut.simpleforum.util.PermissionUtils;
 
@@ -30,11 +31,9 @@ import jakarta.transaction.Transactional;
 public class BoardServiceImpl implements BoardService {
 
 	private final BoardRepository boardRepository;
-	private final UserRepository userRepository;
 
-	public BoardServiceImpl(BoardRepository boardRepository, UserRepository userRepository) {
+	public BoardServiceImpl(BoardRepository boardRepository) {
 		this.boardRepository = boardRepository;
-		this.userRepository = userRepository;
 	}
 
 	@Cacheable(cacheNames = "boards:page", key = "#pageNumber + ':' + #pageSize")
@@ -66,7 +65,7 @@ public class BoardServiceImpl implements BoardService {
 	@CacheEvict(cacheNames = { "boards:page", "boards:user:page" }, allEntries = true)
 	@Override
 	public Board createBoard(String name, String description, Long uid) {
-		Board board = new Board(name, description, userRepository.getReferenceById(uid));
+		Board board = new Board(name, description, EntityReferenceUtils.getReferenceById(User.class, uid));
 		boardRepository.save(board);
 		return board;
 	}
@@ -85,7 +84,7 @@ public class BoardServiceImpl implements BoardService {
 		}
 		board.setName(name);
 		board.setDescription(description);
-		board.setModerator(userRepository.getReferenceById(uid));
+		board.setModerator(EntityReferenceUtils.getReferenceById(User.class, uid));
 		return board;
 	}
 
