@@ -18,11 +18,15 @@ public class PostDto {
 
 	private String title;
 
+	private String content;
+
 	private LocalDateTime createdAt;
 
 	private Long bid;
 
 	private Long authorId;
+
+	private String authorName;
 
 	private Boolean isPinned;
 
@@ -34,9 +38,11 @@ public class PostDto {
 		return builder()
 				.pid(post.getPid())
 				.title(post.getTitle())
+				.content(post.getContent())
 				.createdAt(post.getCreatedAt())
 				.bid(post.getBoard().getBid())
 				.authorId(post.getAuthor().getUid())
+				.authorName(post.getAuthor().getName())
 				.isPinned(post.getIsPinned())
 				.likes(post.getLikes())
 				.dislikes(post.getDislikes())

@@ -14,10 +14,6 @@ import jakarta.persistence.InheritanceType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PastOrPresent;
-import jakarta.validation.constraints.PositiveOrZero;
-import jakarta.validation.constraints.Size;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -32,28 +28,19 @@ public abstract class Comment {
 	@Column(name = "cid")
 	private Long cid;
 
-	@NotNull
-	@Size(min = 1, max = 128, message = "{validation.comment.content.size}")
 	@Column(name = "content")
 	private String content;
 
-	@NotNull
 	@JoinColumn(name = "author_id", referencedColumnName = "uid")
 	@ManyToOne(optional = false)
 	private User author;
 
-	@NotNull
-	@PastOrPresent
 	@Column(name = "created_at")
 	private LocalDateTime createdAt;
 
-	@NotNull
-	@PositiveOrZero
 	@Column(name = "likes")
 	private Integer likes;
 
-	@NotNull
-	@PositiveOrZero
 	@Column(name = "dislikes")
 	private Integer dislikes;
 

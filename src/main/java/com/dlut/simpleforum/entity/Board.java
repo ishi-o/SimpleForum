@@ -6,8 +6,8 @@ import java.util.List;
 
 import com.dlut.simpleforum.entity.User.UserRole;
 import com.dlut.simpleforum.util.MessageSourceUtils;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.CheckConstraint;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -47,7 +47,8 @@ public class Board {
 	@Column(name = "created_at")
 	private LocalDateTime createdAt;
 
-	@OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
+	@JsonIgnore
+	@OneToMany(mappedBy = "board")
 	private List<Post> posts = new ArrayList<>();
 
 	public Board() {

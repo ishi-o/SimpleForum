@@ -2,9 +2,9 @@ package com.dlut.simpleforum.service;
 
 import java.util.List;
 
-import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 
+import com.dlut.simpleforum.dto.result.PageResult;
 import com.dlut.simpleforum.entity.Board;
 import com.dlut.simpleforum.entity.User.UserRole;
 
@@ -14,9 +14,11 @@ import com.dlut.simpleforum.entity.User.UserRole;
  */
 @Service
 public interface BoardService {
-	Slice<Board> getAllBoards(Integer pageNumber, Integer pageSize);
+	PageResult<Board> getAllBoards(Integer pageNumber, Integer pageSize);
 
-	Slice<Board> getLikelyBoards(List<String> keywords, Integer pageNumber, Integer pageSize);
+	PageResult<Board> getLikelyBoards(List<String> keywords, Integer pageNumber, Integer pageSize);
+
+	PageResult<Board> getBoardsByUid(Long uid, Integer pageNumber, Integer pageSize);
 
 	Board getSpecifiedBoard(Long bid);
 

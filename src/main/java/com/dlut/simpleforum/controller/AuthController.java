@@ -71,11 +71,14 @@ public class AuthController {
 
 	@PostMapping("/guest")
 	public ApiResponse<String> guest(HttpSession session) {
-		String guestId = (String) session.getAttribute("userId");
-		if (guestId == null) {
+		Object userId = session.getAttribute("userId");
+		String guestId;
+		if (userId == null) {
 			guestId = "guest_" + UUID.randomUUID();
 			session.setAttribute("userId", guestId);
 			session.setAttribute("userRole", UserRole.GUEST);
+		} else {
+			guestId = (String) session.getAttribute("userId");
 		}
 		return ApiResponse.success(guestId);
 	}

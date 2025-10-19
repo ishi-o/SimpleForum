@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -19,6 +20,7 @@ import com.dlut.simpleforum.dto.response.BoardDto;
 import com.dlut.simpleforum.entity.Board;
 import com.dlut.simpleforum.entity.User.UserRole;
 import com.dlut.simpleforum.service.BoardService;
+import com.dlut.simpleforum.service.PostService;
 import com.dlut.simpleforum.util.PermissionUtils;
 
 import jakarta.validation.Valid;
@@ -33,9 +35,11 @@ import jakarta.validation.constraints.PositiveOrZero;
 @RequestMapping("/boards")
 public class BoardController {
 	private final BoardService boardService;
+	private final PostService postService;
 
-	public BoardController(BoardService boardService) {
+	public BoardController(BoardService boardService, PostService postService) {
 		this.boardService = boardService;
+		this.postService = postService;
 	}
 
 	@GetMapping
@@ -45,7 +49,8 @@ public class BoardController {
 			@RequestParam(name = "q", required = false) String question) {
 		List<Board> boards;
 		if (question != null) {
-			boards = boardService.getLikelyBoards(List.of(question.split(" ")), pageNumber, pageSize).getContent();
+			boards = boardService.getLikelyBoards(List.of(question.split(" ")), pageNumber, pageSize)
+					.getContent();
 		} else {
 			boards = boardService.getAllBoards(pageNumber, pageSize).getContent();
 		}
@@ -99,6 +104,16 @@ public class BoardController {
 			@SessionAttribute("userId") Long editorUid,
 			@SessionAttribute("userRole") UserRole editorRole) {
 		boardService.deleteBoard(bid, editorUid, editorRole);
+		return ApiResponse.success();
+	}
+
+	@PatchMapping("/{bid}/post-pin/{pid}")
+	public ApiResponse<Void> trigglePin(
+			@PathVariable Long bid,
+			@PathVariable Long pid,
+			@SessionAttribute("userId") Long uid,
+			@SessionAttribute("userRole") UserRole userRole) {
+		postService.trigglePin(bid, pid, uid, userRole);
 		return ApiResponse.success();
 	}
 }

@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CheckConstraint;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -20,7 +22,6 @@ import lombok.Getter;
 @Entity
 @Table(name = "users", check = {
 		@CheckConstraint(name = "user_chk_name", constraint = "name REGEXP '^[0-9a-zA-Z_\u4e00-\u9fff]{2,10}$'"),
-		@CheckConstraint(name = "user_chk_pwd", constraint = "password REGEXP '^(?=.*[0-9].*)(?=.*[a-z].*)(?=.*[A-Z].*)(?=.*[~!@#$%&*()_+=-].*)[0-9a-zA-Z~!@#$%&*()_+=-]{8,16}$'")
 }, uniqueConstraints = {
 		@UniqueConstraint(name = "user_uniq_name", columnNames = { "name" })
 })
@@ -34,7 +35,7 @@ public class User {
 	@Column(name = "name", length = 50, nullable = false)
 	private String name;
 
-	@Column(name = "password", length = 50, nullable = false)
+	@Column(name = "password", length = 128, nullable = false)
 	private String password;
 
 	@Enumerated
@@ -48,12 +49,15 @@ public class User {
 	@Column(name = "created_at", updatable = false)
 	private LocalDateTime createdAt;
 
+	@JsonIgnore
 	@OneToMany(mappedBy = "moderator")
 	private final List<Board> boards = new ArrayList<>();
 
+	@JsonIgnore
 	@OneToMany(mappedBy = "author")
 	private final List<Post> posts = new ArrayList<>();
 
+	@JsonIgnore
 	@OneToMany(mappedBy = "author")
 	private final List<Comment> comments = new ArrayList<>();
 

@@ -9,5 +9,5 @@ public interface UserService {
 
 	User login(String username, String password);
 
-	void logout(Long uid);
+	User logout(Long uid);
 }

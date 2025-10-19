@@ -77,3 +77,6 @@ PUT {{host}}/boards/1000000055 {{version}}
 
 ###
 DELETE {{host}}/boards/1000000055 {{version}}
+
+###
+{{host}}/users/1/boards

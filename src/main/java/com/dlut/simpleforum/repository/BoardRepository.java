@@ -15,4 +15,6 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
 				b.description LIKE %:pattern%
 			""")
 	Page<Board> findByNameOrDescriptionContaining(String pattern, Pageable pageable);
+
+	Page<Board> findAllByModeratorUid(Long uid, Pageable pageable);
 }
