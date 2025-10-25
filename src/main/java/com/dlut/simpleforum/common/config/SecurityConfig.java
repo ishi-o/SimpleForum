@@ -1,4 +1,4 @@
-package com.dlut.simpleforum.config;
+package com.dlut.simpleforum.common.config;
 
 import java.util.HashMap;
 import java.util.Map;

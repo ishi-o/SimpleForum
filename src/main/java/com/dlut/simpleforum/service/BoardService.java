@@ -4,9 +4,9 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.dlut.simpleforum.common.enums.UserRole;
 import com.dlut.simpleforum.dto.result.PageResult;
 import com.dlut.simpleforum.entity.Board;
-import com.dlut.simpleforum.entity.User.UserRole;
 
 /**
  * @author Ishi_O

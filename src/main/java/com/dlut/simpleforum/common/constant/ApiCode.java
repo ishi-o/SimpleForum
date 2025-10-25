@@ -1,4 +1,4 @@
-package com.dlut.simpleforum.common;
+package com.dlut.simpleforum.common.constant;
 
 import lombok.Getter;
 

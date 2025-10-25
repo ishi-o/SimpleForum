@@ -14,14 +14,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.SessionAttribute;
 
+import com.dlut.simpleforum.common.annotation.RequirePermission;
+import com.dlut.simpleforum.common.enums.RBACPermission;
+import com.dlut.simpleforum.common.enums.UserRole;
 import com.dlut.simpleforum.dto.request.BoardCreateRequest;
 import com.dlut.simpleforum.dto.response.ApiResponse;
 import com.dlut.simpleforum.dto.response.BoardDto;
 import com.dlut.simpleforum.entity.Board;
-import com.dlut.simpleforum.entity.User.UserRole;
 import com.dlut.simpleforum.service.BoardService;
 import com.dlut.simpleforum.service.PostService;
-import com.dlut.simpleforum.util.PermissionUtils;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
@@ -65,20 +66,13 @@ public class BoardController {
 		return ApiResponse.success(BoardDto.createBoardDto(board));
 	}
 
+	@RequirePermission(permissions = RBACPermission.BOARD_CREATE)
 	@PostMapping
 	public ApiResponse<BoardDto> createBoard(
-			@Valid @RequestBody BoardCreateRequest boardCreateRequest,
-			@SessionAttribute("userId") Long uid,
-			@SessionAttribute("userRole") UserRole role) {
-		Long moderatorUid = boardCreateRequest.getModeratorUid();
-		if (moderatorUid == null) {
-			moderatorUid = uid;
-		} else if (!moderatorUid.equals(uid)) {
-			PermissionUtils.isNotRoleThenThrow(UserRole.ADMIN, role);
-		}
+			@Valid @RequestBody BoardCreateRequest boardCreateRequest) {
 		Board board = boardService.createBoard(boardCreateRequest.getName(),
 				boardCreateRequest.getDescription(),
-				boardCreateRequest.getModeratorUid() == null ? uid : boardCreateRequest.getModeratorUid());
+				boardCreateRequest.getModeratorUid());
 		return ApiResponse.success(BoardDto.createBoardDto(board));
 	}
 

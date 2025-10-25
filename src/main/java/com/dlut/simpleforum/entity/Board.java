@@ -4,8 +4,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.dlut.simpleforum.entity.User.UserRole;
-import com.dlut.simpleforum.util.MessageSourceUtils;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CheckConstraint;
@@ -97,9 +95,4 @@ public class Board {
 		moderator = newModerator;
 	}
 
-	public void checkPermission(User editor) {
-		if (!editor.getRole().equals(UserRole.ADMIN) && !editor.getUid().equals(moderator.getUid())) {
-			throw new IllegalArgumentException(MessageSourceUtils.getMessage("error.editor.no-permission", null));
-		}
-	}
 }

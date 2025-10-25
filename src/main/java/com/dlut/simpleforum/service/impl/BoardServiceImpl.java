@@ -10,15 +10,17 @@ import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import com.dlut.simpleforum.common.annotation.RequirePermission;
+import com.dlut.simpleforum.common.annotation.RequirePermission.RequireAbacPermission;
+import com.dlut.simpleforum.common.enums.ABACPermission;
+import com.dlut.simpleforum.common.enums.UserRole;
 import com.dlut.simpleforum.dto.result.PageResult;
 import com.dlut.simpleforum.entity.Board;
 import com.dlut.simpleforum.entity.User;
-import com.dlut.simpleforum.entity.User.UserRole;
 import com.dlut.simpleforum.repository.BoardRepository;
 import com.dlut.simpleforum.service.BoardService;
-import com.dlut.simpleforum.util.EntityReferenceUtils;
-import com.dlut.simpleforum.util.MessageSourceUtils;
-import com.dlut.simpleforum.util.PermissionUtils;
+import com.dlut.simpleforum.utils.EntityReferenceUtils;
+import com.dlut.simpleforum.utils.MessageSourceUtils;
 
 import jakarta.transaction.Transactional;
 
@@ -70,6 +72,7 @@ public class BoardServiceImpl implements BoardService {
 		return board;
 	}
 
+	@RequirePermission(attributes = @RequireAbacPermission(value = ABACPermission.BOARD_EDIT, resourceId = "#bid"))
 	@Caching(put = {
 			@CachePut(cacheNames = "boards", key = "#bid"),
 	}, evict = {
@@ -79,15 +82,13 @@ public class BoardServiceImpl implements BoardService {
 	public Board updateBoard(Long bid, String name, String description, Long uid, Long editorUid, UserRole userRole) {
 		Board board = boardRepository.findById(bid).orElseThrow(
 				() -> new IllegalArgumentException(MessageSourceUtils.getMessage("error.board.not-found", null)));
-		if (!board.getModerator().getUid().equals(editorUid)) {
-			PermissionUtils.isNotRoleThenThrow(UserRole.ADMIN, userRole);
-		}
 		board.setName(name);
 		board.setDescription(description);
 		board.setModerator(EntityReferenceUtils.getReferenceById(User.class, uid));
 		return board;
 	}
 
+	@RequirePermission(attributes = @RequireAbacPermission(value = ABACPermission.BOARD_EDIT, resourceId = "#bid"))
 	@Caching(evict = {
 			@CacheEvict(cacheNames = "boards", key = "#bid"),
 			@CacheEvict(cacheNames = { "boards:page", "boards:user:page" }, allEntries = true),
@@ -96,9 +97,6 @@ public class BoardServiceImpl implements BoardService {
 	public void deleteBoard(Long bid, Long editorUid, UserRole editorRole) {
 		Board board = boardRepository.findById(bid).orElseThrow(
 				() -> new IllegalArgumentException(MessageSourceUtils.getMessage("error.board.not-found", null)));
-		if (!board.getModerator().getUid().equals(editorUid)) {
-			PermissionUtils.isNotRoleThenThrow(UserRole.ADMIN, editorRole);
-		}
 		boardRepository.deleteById(bid);
 	}
 }

@@ -1,4 +1,4 @@
-package com.dlut.simpleforum.config;
+package com.dlut.simpleforum.common.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -6,17 +6,14 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import com.dlut.simpleforum.interceptor.AuthenticationInterceptor;
-import com.dlut.simpleforum.interceptor.GuestGetInterceptor;
+import com.dlut.simpleforum.common.interceptor.AuthenticationInterceptor;
 
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
 	private final AuthenticationInterceptor authInterceptor;
-	private final GuestGetInterceptor guestGetInterceptor;
 
-	public WebMvcConfig(AuthenticationInterceptor authInterceptor, GuestGetInterceptor guestGetInterceptor) {
+	public WebMvcConfig(AuthenticationInterceptor authInterceptor) {
 		this.authInterceptor = authInterceptor;
-		this.guestGetInterceptor = guestGetInterceptor;
 	}
 
 	@Override
@@ -31,16 +28,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
 						"/error")
 				.excludeHttpMethods(HttpMethod.OPTIONS)
 				.order(1);
-		registry.addInterceptor(guestGetInterceptor)
-				.addPathPatterns("/**")
-				.excludePathPatterns(
-						"/auth/me",
-						"/auth/login",
-						"/auth/register",
-						"/auth/guest",
-						"/error")
-				.excludeHttpMethods(HttpMethod.OPTIONS)
-				.order(2);
 	}
 
 	@Override

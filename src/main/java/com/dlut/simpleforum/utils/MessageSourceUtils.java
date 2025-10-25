@@ -1,4 +1,4 @@
-package com.dlut.simpleforum.util;
+package com.dlut.simpleforum.utils;
 
 import java.util.Locale;
 

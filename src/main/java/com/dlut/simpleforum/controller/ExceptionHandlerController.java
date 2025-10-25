@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import com.dlut.simpleforum.common.exception.auth.AuthenticationException;
 import com.dlut.simpleforum.dto.response.ApiResponse;
 import com.dlut.simpleforum.dto.response.ErrorResponse;
 
@@ -25,10 +26,13 @@ public class ExceptionHandlerController {
 			errors.append(error.getCode() + ":" + error.getDefaultMessage() + "\n");
 		}
 		return ApiResponse.failure(
-				ErrorResponse
-						.builder()
-						.message(errors.toString())
-						.build());
+				ErrorResponse.of(errors.toString()));
+	}
+
+	@ResponseStatus(HttpStatus.UNAUTHORIZED)
+	@ExceptionHandler({ AuthenticationException.class })
+	public ApiResponse<ErrorResponse> handleAuthenticationException(AuthenticationException exception) {
+		return ApiResponse.failure(ErrorResponse.from(exception));
 	}
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST)

@@ -2,8 +2,8 @@ package com.dlut.simpleforum.dto.response;
 
 import java.time.LocalDateTime;
 
+import com.dlut.simpleforum.common.enums.UserRole;
 import com.dlut.simpleforum.entity.User;
-import com.dlut.simpleforum.entity.User.UserRole;
 
 import lombok.Builder;
 import lombok.Data;

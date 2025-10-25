@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.dlut.simpleforum.common.enums.UserRole;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CheckConstraint;
@@ -42,10 +43,6 @@ public class User {
 	@Column(name = "role", nullable = false)
 	private UserRole role;
 
-	@Enumerated
-	@Column(name = "status", nullable = false)
-	private UserStatus status;
-
 	@Column(name = "created_at", updatable = false)
 	private LocalDateTime createdAt;
 
@@ -67,44 +64,11 @@ public class User {
 	public User(String name, String password) {
 		this.name = name;
 		this.password = password;
-		this.role = UserRole.MEMBER;
+		this.role = UserRole.USER;
 		this.createdAt = LocalDateTime.now();
-		this.status = UserStatus.OFFLINE;
-	}
-
-	public enum UserRole {
-		MEMBER, // 普通成员
-		ADMIN, // 管理员
-		GUEST // 游客
-	}
-
-	public enum UserStatus {
-		ACTIVE, // 活跃
-		OFFLINE, // 下线
-		BLOCKED // 被封禁
 	}
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public void setStatus(UserStatus status) {
-		this.status = status;
-	}
-
-	public void changePassword(String oldVal, String newVal) {
-		if (password.equals(oldVal)) {
-			password = newVal;
-		} else {
-			throw new IllegalArgumentException("密码不正确");
-		}
-	}
-
-	public void changeRole(UserRole newVal, User editor) {
-		if (editor.getRole().equals(UserRole.ADMIN)) {
-			role = newVal;
-		} else {
-			throw new IllegalArgumentException("编辑者权限不足");
-		}
 	}
 }

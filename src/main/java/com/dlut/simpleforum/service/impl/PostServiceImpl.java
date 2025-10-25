@@ -12,17 +12,19 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Order;
 import org.springframework.stereotype.Service;
 
+import com.dlut.simpleforum.common.annotation.RequirePermission;
+import com.dlut.simpleforum.common.annotation.RequirePermission.RequireAbacPermission;
+import com.dlut.simpleforum.common.enums.ABACPermission;
+import com.dlut.simpleforum.common.enums.UserRole;
 import com.dlut.simpleforum.dto.result.PageResult;
 import com.dlut.simpleforum.entity.Board;
 import com.dlut.simpleforum.entity.Post;
 import com.dlut.simpleforum.entity.User;
-import com.dlut.simpleforum.entity.User.UserRole;
 import com.dlut.simpleforum.repository.BoardRepository;
 import com.dlut.simpleforum.repository.PostRepository;
 import com.dlut.simpleforum.service.PostService;
-import com.dlut.simpleforum.util.EntityReferenceUtils;
-import com.dlut.simpleforum.util.MessageSourceUtils;
-import com.dlut.simpleforum.util.PermissionUtils;
+import com.dlut.simpleforum.utils.EntityReferenceUtils;
+import com.dlut.simpleforum.utils.MessageSourceUtils;
 
 import jakarta.transaction.Transactional;
 
@@ -65,6 +67,7 @@ public class PostServiceImpl implements PostService {
 		return post;
 	}
 
+	@RequirePermission(attributes = @RequireAbacPermission(value = ABACPermission.POST_EDIT, resourceId = "#pid"))
 	@CachePut(cacheNames = "posts", key = "#pid")
 	@CacheEvict(cacheNames = { "posts:page" }, allEntries = true)
 	@Override
@@ -73,13 +76,11 @@ public class PostServiceImpl implements PostService {
 				() -> new IllegalArgumentException(MessageSourceUtils.getMessage("error.board.not-found", null)));
 		Post post = postRepository.findByBoardBidAndPid(bid, pid).orElseThrow(
 				() -> new IllegalArgumentException(MessageSourceUtils.getMessage("error.post.not-found", null)));
-		if (!board.getModerator().getUid().equals(uid)) {
-			PermissionUtils.isNotRoleThenThrow(UserRole.ADMIN, userRole);
-		}
 		post.trigglePin();
 		return post;
 	}
 
+	@RequirePermission(attributes = @RequireAbacPermission(value = ABACPermission.POST_EDIT, resourceId = "#pid"))
 	@Caching(evict = {
 			@CacheEvict(cacheNames = "posts:page", allEntries = true),
 			@CacheEvict(cacheNames = "posts", key = "#pid")
@@ -88,9 +89,6 @@ public class PostServiceImpl implements PostService {
 	public void removePost(Long bid, Long pid, Long uid, UserRole userRole) {
 		Board board = boardRepository.findById(bid).orElseThrow(
 				() -> new IllegalArgumentException(MessageSourceUtils.getMessage("error.board.not-found", null)));
-		if (!board.getModerator().getUid().equals(uid)) {
-			PermissionUtils.isNotRoleThenThrow(UserRole.ADMIN, userRole);
-		}
 		postRepository.deleteById(pid);
 	}
 

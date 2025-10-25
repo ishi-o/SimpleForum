@@ -1,15 +1,15 @@
-package com.dlut.simpleforum.interceptor;
+package com.dlut.simpleforum.common.interceptor;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
+import com.dlut.simpleforum.common.enums.UserRole;
 import com.dlut.simpleforum.dto.response.ApiResponse;
 import com.dlut.simpleforum.dto.response.ErrorResponse;
-import com.dlut.simpleforum.entity.User.UserRole;
-import com.dlut.simpleforum.util.MessageSourceUtils;
-import com.dlut.simpleforum.util.ObjectMapperUtils;
+import com.dlut.simpleforum.utils.MessageSourceUtils;
+import com.dlut.simpleforum.utils.ObjectMapperUtils;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

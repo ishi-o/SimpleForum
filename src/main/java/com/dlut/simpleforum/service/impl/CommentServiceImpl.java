@@ -13,7 +13,7 @@ import com.dlut.simpleforum.entity.SubComment;
 import com.dlut.simpleforum.entity.User;
 import com.dlut.simpleforum.repository.CommentRepository;
 import com.dlut.simpleforum.service.CommentService;
-import com.dlut.simpleforum.util.EntityReferenceUtils;
+import com.dlut.simpleforum.utils.EntityReferenceUtils;
 
 import jakarta.transaction.Transactional;
 

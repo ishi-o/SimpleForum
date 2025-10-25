@@ -2,8 +2,8 @@ package com.dlut.simpleforum.dto.response;
 
 import java.time.LocalDateTime;
 
-import com.dlut.simpleforum.common.ApiCode;
-import com.dlut.simpleforum.util.MessageSourceUtils;
+import com.dlut.simpleforum.common.constant.ApiCode;
+import com.dlut.simpleforum.utils.MessageSourceUtils;
 
 import lombok.Builder;
 import lombok.Data;

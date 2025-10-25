@@ -2,9 +2,9 @@ package com.dlut.simpleforum.service;
 
 import java.util.List;
 
+import com.dlut.simpleforum.common.enums.UserRole;
 import com.dlut.simpleforum.dto.result.PageResult;
 import com.dlut.simpleforum.entity.Post;
-import com.dlut.simpleforum.entity.User.UserRole;
 
 /**
  * @author Ishi_O

@@ -12,12 +12,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.SessionAttribute;
 
+import com.dlut.simpleforum.common.enums.UserRole;
 import com.dlut.simpleforum.dto.request.PostCreateRequest;
 import com.dlut.simpleforum.dto.response.ApiResponse;
 import com.dlut.simpleforum.dto.response.PostDto;
 import com.dlut.simpleforum.dto.result.PageResult;
 import com.dlut.simpleforum.entity.Post;
-import com.dlut.simpleforum.entity.User.UserRole;
 import com.dlut.simpleforum.service.PostService;
 
 import jakarta.validation.constraints.Positive;
