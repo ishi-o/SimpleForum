@@ -19,7 +19,7 @@ import com.dlut.simpleforum.common.interceptor.PostAbacPermissionChecker;
 @Configuration
 public class PermissionCheckerConfig {
 	@Bean
-	public Map<ResourceType, AbacPermissionChecker> permissionCheckers(
+	public Map<ResourceType, AbacPermissionChecker> resourceCheckers(
 			BoardAbacPermissionChecker boardAbacPermissionChecker,
 			PostAbacPermissionChecker postAbacPermissionChecker) {
 		Map<ResourceType, AbacPermissionChecker> ret = new HashMap<>();

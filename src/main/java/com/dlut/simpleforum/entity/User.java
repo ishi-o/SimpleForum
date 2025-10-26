@@ -1,5 +1,6 @@
 package com.dlut.simpleforum.entity;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +27,7 @@ import lombok.Getter;
 }, uniqueConstraints = {
 		@UniqueConstraint(name = "user_uniq_name", columnNames = { "name" })
 })
-public class User {
+public class User implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

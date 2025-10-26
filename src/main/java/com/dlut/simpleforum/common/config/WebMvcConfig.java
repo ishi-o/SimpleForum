@@ -6,28 +6,21 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import com.dlut.simpleforum.common.interceptor.AuthenticationInterceptor;
+import com.dlut.simpleforum.common.interceptor.SessionInitializerInterceptor;
 
+import lombok.AllArgsConstructor;
+
+@AllArgsConstructor
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
-	private final AuthenticationInterceptor authInterceptor;
 
-	public WebMvcConfig(AuthenticationInterceptor authInterceptor) {
-		this.authInterceptor = authInterceptor;
-	}
+	private final SessionInitializerInterceptor sessionInitializerInterceptor;
 
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
-		registry.addInterceptor(authInterceptor)
+		registry.addInterceptor(sessionInitializerInterceptor)
 				.addPathPatterns("/**")
-				.excludePathPatterns(
-						"/auth/register",
-						"/auth/login",
-						"/auth/logout",
-						"/auth/guest",
-						"/error")
-				.excludeHttpMethods(HttpMethod.OPTIONS)
-				.order(1);
+				.excludeHttpMethods(HttpMethod.OPTIONS);
 	}
 
 	@Override

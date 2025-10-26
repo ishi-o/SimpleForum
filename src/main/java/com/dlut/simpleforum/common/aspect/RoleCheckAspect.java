@@ -22,7 +22,7 @@ public class RoleCheckAspect {
 	public Object checkRole(ProceedingJoinPoint pjp, RequireRole requireRole) throws Throwable {
 		List<UserRole> include = List.of(requireRole.include()), exclude = List.of(requireRole.exclude());
 		UserRole currRole = SessionManager.getSessionUser().getUserRole();
-		if (!include.contains(currRole) || exclude.contains(currRole)) {
+		if ((include.size() != 0 && !include.contains(currRole)) || exclude.contains(currRole)) {
 			throw new IllegalArgumentException("");
 		}
 		return pjp.proceed();

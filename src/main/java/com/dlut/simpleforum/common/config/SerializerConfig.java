@@ -44,6 +44,6 @@ public class SerializerConfig {
 
 	@Bean
 	public HessianRedisSerializer<Object> hessianRedisSerializer() {
-		return new HessianRedisSerializer<>();
+		return new HessianRedisSerializer<Object>();
 	}
 }

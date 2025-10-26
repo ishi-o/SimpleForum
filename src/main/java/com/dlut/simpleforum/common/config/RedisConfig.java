@@ -8,6 +8,7 @@ import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.GenericJackson3JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
@@ -21,13 +22,14 @@ public class RedisConfig {
 	public RedisTemplate<String, Object> redisTemplate(
 			RedisConnectionFactory redisConnectionFactory,
 			StringRedisSerializer stringRedisSerializer,
-			HessianRedisSerializer<Object> hessianRedisSerializer) {
+			GenericJackson3JsonRedisSerializer genericJackson3JsonRedisSerializer) {
 		RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
 		redisTemplate.setConnectionFactory(redisConnectionFactory);
 		redisTemplate.setKeySerializer(stringRedisSerializer);
 		redisTemplate.setHashKeySerializer(stringRedisSerializer);
-		redisTemplate.setValueSerializer(hessianRedisSerializer);
-		redisTemplate.setHashValueSerializer(hessianRedisSerializer);
+		redisTemplate.setValueSerializer(genericJackson3JsonRedisSerializer);
+		redisTemplate.setHashValueSerializer(genericJackson3JsonRedisSerializer);
+		redisTemplate.setDefaultSerializer(genericJackson3JsonRedisSerializer);
 		return redisTemplate;
 	}
 
@@ -35,14 +37,14 @@ public class RedisConfig {
 	public RedisCacheManager cacheManager(
 			RedisConnectionFactory redisConnectionFactory,
 			StringRedisSerializer stringRedisSerializer,
-			HessianRedisSerializer<Object> hessianRedisSerializer) {
+			GenericJackson3JsonRedisSerializer genericJackson3JsonRedisSerializer) {
 		return RedisCacheManager.builder(redisConnectionFactory)
 				.cacheDefaults(RedisCacheConfiguration.defaultCacheConfig()
 						.entryTtl(Duration.ofMinutes(30))
 						.serializeKeysWith(RedisSerializationContext.SerializationPair
 								.fromSerializer(stringRedisSerializer))
 						.serializeValuesWith(RedisSerializationContext.SerializationPair
-								.fromSerializer(hessianRedisSerializer)))
+								.fromSerializer(genericJackson3JsonRedisSerializer)))
 				.build();
 	}
 }

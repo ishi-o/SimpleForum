@@ -56,8 +56,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 	@Transactional
 	@Override
 	public void logout(SessionUser sessionUser) {
-		sessionUser.userLogout();
 		sessionManager.removeActiveUser(sessionUser.getUid());
+		sessionUser.userLogout();
 	}
 
 }

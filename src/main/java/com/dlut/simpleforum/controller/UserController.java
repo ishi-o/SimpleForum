@@ -39,7 +39,7 @@ public class UserController {
 	}
 
 	@ResponseStatus(HttpStatus.CREATED)
-	@PostMapping
+	@PostMapping("/register")
 	public ApiResponse<Void> register(@RequestBody @Valid UserAuthRequest userAuthRequest) {
 		userService.register(userAuthRequest.getUsername(), userAuthRequest.getPassword());
 		return ApiResponse.success();
