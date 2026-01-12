@@ -1,82 +1,116 @@
-@host=http://localhost:8000/api
-@version=HTTP/1.1
-@type-json=Content-Type: application/json
+### 
 
-POST {{host}}/auth/register {{version}}
-{{type-json}}
+@host = http://localhost:8080/api/contents
 
-{
-	"username": "ishioi",
-	"password": "Aa1!bbbb"
-}
 
-###
-POST {{host}}/auth/login {{version}}
-{{type-json}}
+### 
+
+POST {{host}}/auth/register HTTP/1.1
+Content-Type: application/json
 
 {
-	"username": "ishio",
-	"password": "Aa1!bbbb"
+  "password": "Aa1!bbbb",
+  "username": "ishioi"
 }
 
-###
-POST {{host}}/auth/logout {{version}}
-{{type-json}}
 
+### 
 
-###
-POST {{host}}/auth/guest {{version}}
-{{type-json}}
-
-###
-{{host}}/boards
-
-###
-{{host}}/boards?q=A
-
-###
-{{host}}/boards?page=1&size=100
-
-###
-{{host}}/boards/1000000006
-
-###
-{{host}}/boards/1000000006/posts
-
-###
-{{host}}/boards/1000000006/posts/6
-
-###
-{{host}}/boards/1000000006/posts/6/comments
-
-###
-{{host}}/boards/1000000006/posts/6/comments/2
-
-###
-POST {{host}}/boards {{version}}
-{{type-json}}
+POST {{host}}/auth/login HTTP/1.1
+Content-Type: application/json
 
 {
-	"name": "你好",
-	"description": "这是介绍",
-	"moderatorUid": 1
+  "password": "Aa1!bbbb",
+  "username": "ishio"
 }
 
-###
-PUT {{host}}/boards/1000000055 {{version}}
-{{type-json}}
+
+### 
+
+POST {{host}}/auth/logout HTTP/1.1
+Content-Type: application/json
+
+
+### 
+
+POST {{host}}/auth/guest HTTP/1.1
+Content-Type: application/json
+
+
+### 
+
+GET {{host}}/boards HTTP/1.1
+
+
+### 
+
+GET {{host}}/boards?q=A HTTP/1.1
+
+
+### 
+
+GET {{host}}/boards?page=1&size=100 HTTP/1.1
+
+
+### 
+
+GET {{host}}/boards/1000000006 HTTP/1.1
+
+
+### 
+
+GET {{host}}/boards/1000000006/posts HTTP/1.1
+
+
+### 
+
+GET {{host}}/boards/1000000006/posts/6 HTTP/1.1
+
+
+### 
+
+GET {{host}}/boards/1000000006/posts/6/comments HTTP/1.1
+
+
+### 
+
+GET {{host}}/boards/1000000006/posts/6/comments/2 HTTP/1.1
+
+
+### 
+
+POST {{host}}/boards HTTP/1.1
+Content-Type: application/json
 
 {
-	"name": "你好呀",
-	"description": "这是介绍喵！",
-	"moderatorUid": 2
+  "description": "这是介绍",
+  "moderatorUid": 1,
+  "name": "你好"
 }
 
-###
-{{host}}/boards/1000000055
 
-###
-DELETE {{host}}/boards/1000000055 {{version}}
+### 
 
-###
-{{host}}/users/1/boards
+PUT {{host}}/boards/1000000055 HTTP/1.1
+Content-Type: application/json
+
+{
+  "description": "这是介绍喵！",
+  "moderatorUid": 2,
+  "name": "你好呀"
+}
+
+
+### 
+
+GET {{host}}/boards/1000000055 HTTP/1.1
+
+
+### 
+
+DELETE {{host}}/boards/1000000055 HTTP/1.1
+
+
+### 
+
+GET {{host}}/users/1/boards HTTP/1.1

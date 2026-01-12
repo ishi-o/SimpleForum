@@ -2,6 +2,9 @@ server:
   port: 8080
 
 spring:
+  config:
+    import: optional:nacos:${spring.application.name}.${file-extension:yaml}
+
   application:
     name: gateway-service
 
@@ -25,14 +28,20 @@ spring:
           predicates:
             - Path=/api/users/**
           filters:
-            - StripPrefix=1
+            - StripPrefix=2
 
-        - id: post-service
+        - id: content-service
           uri: lb://content-service
           predicates:
             - Path=/api/contents/**
           filters:
-            - StripPrefix=1
+            - StripPrefix=2
 
       default-filters:
         - AddRequestHeader=X-Request-Gateway, gateway-service
+
+logging:
+  level:
+    root: INFO
+  file:
+    name: ../logs/api-gateway-dev.log
