@@ -3,21 +3,34 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.2.0</version>
+		<version>4.0.0</version>
 		<relativePath />
 	</parent>
+
 	<groupId>com.dlut</groupId>
 	<artifactId>forumx</artifactId>
-	<version>0.1.0-SNAPSHOT</version>
-	<packaging>forumx-parent</packaging>
+	<version>${revision}</version>
+
+	<packaging>pom</packaging>
+
 	<name>forumx</name>
 	<description>Demo project for Spring Boot</description>
+
+	<modules>
+		<module>api-gateway</module>
+		<module>content-service</module>
+		<module>user-service</module>
+	</modules>
+
 	<properties>
+		<revision>0.1.0-SNAPSHOT</revision>
 		<java.version>21</java.version>
-		<spring-cloud-alibaba.version>2023.0.1.0</spring-cloud-alibaba.version>
+		<spring-cloud.version>2024.0.3</spring-cloud.version>
+		<spring-cloud-alibaba.version>2023.0.3.4</spring-cloud-alibaba.version>
 		<mysql.version>8.0.33</mysql.version>
 		<logstash-logback.version>7.4</logstash-logback.version>
 		<lombok.version>1.18.30</lombok.version>
@@ -25,6 +38,13 @@
 
 	<dependencyManagement>
 		<dependencies>
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-dependencies</artifactId>
+				<version>${spring-cloud.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
 			<dependency>
 				<groupId>com.alibaba.cloud</groupId>
 				<artifactId>spring-cloud-alibaba-dependencies</artifactId>
@@ -34,12 +54,6 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
-
-	<modules>
-		<module>api-gateway</module>
-		<module>content-service</module>
-		<module>user-service</module>
-	</modules>
 
 	<dependencies>
 		<!-- Spring Cloud Alibaba -->
@@ -66,11 +80,6 @@
 			<groupId>com.alibaba.cloud</groupId>
 			<artifactId>spring-cloud-starter-alibaba-seata</artifactId>
 			<optional>true</optional>
-		</dependency>
-		<!-- Gateway -->
-		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-gateway</artifactId>
 		</dependency>
 		<!-- Logger -->
 		<dependency>
@@ -161,10 +170,50 @@
 	</dependencies>
 
 	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>flatten-maven-plugin</artifactId>
+					<version>1.5.0</version>
+					<configuration>
+						<flattenMode>resolveCiFriendliesOnly</flattenMode>
+						<updatePomFile>true</updatePomFile>
+						<excludePomFiles>
+							<excludePomFile>api-gateway/pom.xml</excludePomFile>
+							<excludePomFile>content-service/pom.xml</excludePomFile>
+							<excludePomFile>user-service/pom.xml</excludePomFile>
+						</excludePomFiles>
+					</configuration>
+					<executions>
+						<execution>
+							<id>flatten</id>
+							<phase>process-resources</phase>
+							<goals>
+								<goal>flatten</goal>
+							</goals>
+						</execution>
+						<execution>
+							<id>flatten.verify</id>
+							<phase>verify</phase>
+							<goals>
+								<goal>flatten</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+
+				<plugin>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-maven-plugin</artifactId>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+
 		<plugins>
 			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>flatten-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
 	</build>

@@ -1,0 +1,75 @@
+version: "3.8"
+
+networks:
+  forumx_network_dev:
+    driver: bridge
+
+volumes:
+  mysql-data:
+  nacos-data:
+  redis-data:
+  mysql-init:
+
+services:
+  mysql:
+    image: mysql:8.0.36
+    container_name: forumx-mysql
+    restart: always
+    networks:
+      - forumx_network_dev
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DEFAULT_CHARACTER_SET: utf8mb4
+      MYSQL_CHARACTER_SET_SERVER: utf8mb4
+      MYSQL_COLLATION_SERVER: utf8mb4_unicode_ci
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./mysql/init:/docker-entrypoint-initdb.d
+      - ./mysql/conf:/etc/mysql/conf.d
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot"]
+      interval: 5s
+      timeout: 10s
+      retries: 10
+
+  redis:
+    image: redis:7.2.4
+    container_name: forumx-redis
+    restart: always
+    networks:
+      - forumx_network_dev
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+      - ./redis/conf/redis.conf:/etc/redis/redis.conf
+    command: redis-server /etc/redis/redis.conf --appendonly yes
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  nacos:
+    image: nacos/nacos-server:v2.3.2
+    container_name: forumx-nacos
+    restart: always
+    networks:
+      - microservice-network
+    ports:
+      - "8848:8848"
+      - "9848:9848"
+    environment:
+      MODE: standalone
+      MYSQL_SERVICE_HOST: mysql
+      MYSQL_SERVICE_PORT: 3306
+      MYSQL_SERVICE_DB_NAME: nacos_config
+      MYSQL_SERVICE_USER: root
+      MYSQL_SERVICE_PASSWORD: root123456
+      NACOS_AUTH_ENABLE: false
+    volumes:
+      - nacos-data:/home/nacos/data
+      - ./nacos/logs:/home/nacos/logs
+    depends_on:
+      mysql:
+        condition: service_healthy
