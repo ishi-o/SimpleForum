@@ -1,3 +1,4 @@
+-- content_db
 CREATE DATABASE IF NOT EXISTS content_db DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 CREATE USER IF NOT EXISTS 'content_service'@'%' IDENTIFIED BY 'C0nt3ntSrv@2025!db';
@@ -5,4 +6,10 @@ CREATE USER IF NOT EXISTS 'content_service'@'%' IDENTIFIED BY 'C0nt3ntSrv@2025!d
 GRANT ALL PRIVILEGES ON content_db.* TO 'content_service'@'%';
 FLUSH PRIVILEGES;
 
-USE content_db;
+-- user_db
+CREATE DATABASE IF NOT EXISTS user_db DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+CREATE USER IF NOT EXISTS 'user_service'@'%' IDENTIFIED BY 'U3er@2025!db';
+
+GRANT ALL PRIVILEGES ON user_db.* TO 'user_service'@'%';
+FLUSH PRIVILEGES;
