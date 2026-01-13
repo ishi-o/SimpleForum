@@ -30,7 +30,7 @@ spring:
       namespace: spring:session:userservice
 
 mybatis:
-  mapper-locations: classpath:mapper/*.xml
+  mapper-locations: classpath:mapper/**/*.xml
   type-aliases-package: com.dlut.forumx.user.entity
   configuration:
     map-underscore-to-camel-case: true
