@@ -11,19 +11,20 @@
 		<relativePath />
 	</parent>
 
-	<groupId>com.dlut</groupId>
+	<groupId>com.dlut.forumx</groupId>
 	<artifactId>forumx</artifactId>
 	<version>${revision}</version>
 
 	<packaging>pom</packaging>
 
 	<name>forumx</name>
-	<description>Demo project for Spring Boot</description>
+	<description>Extensible forum</description>
 
 	<modules>
-		<module>api-gateway</module>
-		<module>content-service</module>
-		<module>user-service</module>
+		<module>forumx-api-gateway</module>
+		<module>forumx-content-service</module>
+		<module>forumx-user-service</module>
+		<module>forumx-commons</module>
 	</modules>
 
 	<properties>
@@ -32,7 +33,7 @@
 		<spring-cloud.version>2025.0.1</spring-cloud.version>
 		<spring-cloud-alibaba.version>2025.0.0.0</spring-cloud-alibaba.version>
 		<mysql.version>8.0.33</mysql.version>
-		<mybatis.version>4.0.1</mybatis.version>
+		<mybatis.version>3.0.5</mybatis.version>
 		<logstash-logback.version>7.4</logstash-logback.version>
 		<lombok.version>1.18.30</lombok.version>
 		<flatten-maven-plugin.version>1.5.0</flatten-maven-plugin.version>
