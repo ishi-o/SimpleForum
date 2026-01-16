@@ -29,6 +29,23 @@ spring:
       flush-mode: ON_SAVE
       namespace: spring:session:userservice
 
+  messages:
+    encoding: UTF-8
+    basename: i18n/messages
+
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    username: forumx
+    password: forumx
+
+  mail:
+    host: smtp.qq.com
+    port: 465
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    protocol: smtps
+
 mybatis:
   mapper-locations: classpath:mapper/**/*.xml
   type-aliases-package: com.dlut.forumx.user.entity
@@ -51,3 +68,10 @@ logging:
     root: INFO
   file:
     name: ../logs/user-service-dev.log
+
+aliyun:
+  sms:
+    accessKeyId: ${SMS_ACCESS_KEY}
+    accessKeySecret: ${SMS_ACCESS_SECRET}
+    signName: "Forumx"
+    templateCode: "SMS_154950909"

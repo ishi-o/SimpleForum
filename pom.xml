@@ -38,6 +38,8 @@
 		<lombok.version>1.18.30</lombok.version>
 		<flatten-maven-plugin.version>1.5.0</flatten-maven-plugin.version>
 		<flatten.skip>true</flatten.skip>
+		<aliyun-sdk.version>4.6.3</aliyun-sdk.version>
+		<aliyun-smsapi.version>2.2.1</aliyun-smsapi.version>
 	</properties>
 
 	<dependencyManagement>

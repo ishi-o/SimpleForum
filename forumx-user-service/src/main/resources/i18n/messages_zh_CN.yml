@@ -1,0 +1,16 @@
+validation:
+  user:
+    name:
+      notblank: "用户名不能为空！"
+      format: "用户名只能包含数字、字母、中文、'_'、'-'！"
+      size: "用户名长度必须在{min}~{max}之间！"
+    pwd:
+      notblank: "密码不能为空！"
+      format: "用户密码必须至少包含且只能包含一个数字、小写字母、大写字母、特殊字符(~!@#$%&*()_+=-)！"
+      size: "用户密码长度必须在{min}~{max}之间！"
+    email:
+      notblank: "用户邮箱不能为空！"
+      format: "用户邮箱格式不正确！"
+    phone:
+      format: "用户电话号码不正确！"
+  vcode: "验证码格式不正确！"
