@@ -35,7 +35,8 @@ public class VerificationMessage {
 	@AllArgsConstructor
 	public enum VerificationType {
 		EMAIL("EMAIL"),
-		SMS("SMS");
+		SMS("SMS"),
+		PASSWORD("PASSWORD");
 
 		private String value;
 	}

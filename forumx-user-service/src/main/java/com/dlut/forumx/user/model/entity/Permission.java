@@ -1,4 +1,4 @@
-package com.dlut.forumx.user.entity;
+package com.dlut.forumx.user.model.entity;
 
 import java.util.Date;
 
