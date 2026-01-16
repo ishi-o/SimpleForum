@@ -1,4 +1,4 @@
-package com.dlut.forumx.user.auth;
+package com.dlut.forumx.user.verification.service;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

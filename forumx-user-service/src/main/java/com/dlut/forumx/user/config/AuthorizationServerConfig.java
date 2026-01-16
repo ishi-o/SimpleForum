@@ -31,15 +31,22 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import com.dlut.forumx.user.security.converter.PasswordAuthenticationConverter;
+import com.dlut.forumx.user.security.provider.PasswordAuthenticationProvider;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
 
+import lombok.RequiredArgsConstructor;
+
 @Configuration
 @EnableMethodSecurity
+@RequiredArgsConstructor
 public class AuthorizationServerConfig {
+
+	private final PasswordAuthenticationProvider passwordAuthenticationProvider;
 
 	@Bean
 	@Order(1)
@@ -63,7 +70,14 @@ public class AuthorizationServerConfig {
 				.cors(cors -> cors.configurationSource(corsConfigurationSource))
 				.securityMatcher(authorizationServerConfigurer.getEndpointsMatcher())
 				.with(authorizationServerConfigurer,
-						(authorizationServer) -> authorizationServer.oidc(Customizer.withDefaults()))
+						(cfg) -> {
+							cfg.tokenEndpoint(tokenEndpoint -> {
+								tokenEndpoint
+										.accessTokenRequestConverter(new PasswordAuthenticationConverter())
+										.authenticationProvider(passwordAuthenticationProvider);
+							});
+							cfg.oidc(Customizer.withDefaults());
+						})
 				.authorizeHttpRequests((authorize) -> authorize.anyRequest().authenticated());
 		return http.build();
 	}
@@ -124,6 +138,7 @@ public class AuthorizationServerConfig {
 				.clientSecret("{noop}secret")
 				.clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
 				.authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
+				.authorizationGrantType(new AuthorizationGrantType("password"))
 				.scope(OidcScopes.OPENID)
 				.scope(OidcScopes.PROFILE)
 				.clientSettings(ClientSettings.builder().requireAuthorizationConsent(true).build())
