@@ -23,7 +23,7 @@
 	<modules>
 		<module>forumx-api-gateway</module>
 		<module>forumx-content-service</module>
-		<module>forumx-user-service</module>
+		<module>forumx-iam-service</module>
 		<module>forumx-commons</module>
 	</modules>
 

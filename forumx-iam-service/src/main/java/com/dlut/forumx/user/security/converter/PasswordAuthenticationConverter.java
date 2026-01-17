@@ -11,7 +11,7 @@ public class PasswordAuthenticationConverter implements AuthenticationConverter 
 
 	@Override
 	public Authentication convert(HttpServletRequest request) {
-		if (!"password".equals(request.getParameter("grant_type"))) {
+		if (!"password".equals(request.getParameter("auth_type"))) {
 			return null;
 		}
 		String username = request.getParameter("username");

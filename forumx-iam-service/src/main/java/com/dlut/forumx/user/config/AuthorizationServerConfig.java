@@ -138,7 +138,6 @@ public class AuthorizationServerConfig {
 				.clientSecret("{noop}secret")
 				.clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
 				.authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
-				.authorizationGrantType(new AuthorizationGrantType("password"))
 				.scope(OidcScopes.OPENID)
 				.scope(OidcScopes.PROFILE)
 				.clientSettings(ClientSettings.builder().requireAuthorizationConsent(true).build())

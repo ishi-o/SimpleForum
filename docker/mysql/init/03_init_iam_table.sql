@@ -36,21 +36,6 @@ CREATE TABLE `roles` (
     , UNIQUE KEY `uk_role_code` (`role_code`)
 ) COMMENT = 'Roles table';
 
-CREATE TABLE `permissions` (
-    `permission_id` INT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Permission ID'
-    , `permission_code` VARCHAR(100) NOT NULL COMMENT 'Permission code'
-    , `permission_name` VARCHAR(50) NOT NULL COMMENT 'Permission name'
-    , `permission_type` TINYINT NOT NULL COMMENT 'Permission type: 1-DATA, 2-FUNCTION, 3-API'
-    , `parent_id` INT UNSIGNED DEFAULT 0 COMMENT 'Parent permission ID'
-    , `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Creation time'
-    , `api_method` VARCHAR(10) NOT NULL COMMENT 'HTTP Method'
-    , `api_path` VARCHAR(50) NOT NULL COMMENT 'Request URL path'
-    , PRIMARY KEY (`permission_id`)
-    , UNIQUE KEY `uk_permission_code` (`permission_code`)
-    , KEY `idx_parent` (`parent_id`)
-    , KEY `idx_type` (`permission_type`)
-) COMMENT = 'Permissions table';
-
 CREATE TABLE `user_roles` (
     `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Record ID'
     , `user_id` BIGINT UNSIGNED NOT NULL COMMENT 'User ID'
@@ -63,14 +48,3 @@ CREATE TABLE `user_roles` (
     , FOREIGN KEY (`role_id`) REFERENCES `roles` (`role_id`) ON DELETE CASCADE
 ) COMMENT = 'User-roles relationship table';
 
-CREATE TABLE `role_permissions` (
-    `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Record ID'
-    , `role_id` INT UNSIGNED NOT NULL COMMENT 'Role ID'
-    , `permission_id` INT UNSIGNED NOT NULL COMMENT 'Permission ID'
-    , `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Creation time'
-    , PRIMARY KEY (`id`)
-    , UNIQUE KEY `uk_role_permission` (`role_id`, `permission_id`)
-    , KEY `idx_permission` (`permission_id`)
-    , FOREIGN KEY (`role_id`) REFERENCES `roles` (`role_id`) ON DELETE CASCADE
-    , FOREIGN KEY (`permission_id`) REFERENCES `permissions` (`permission_id`) ON DELETE CASCADE
-) COMMENT = 'Role-permissions relationship table';
