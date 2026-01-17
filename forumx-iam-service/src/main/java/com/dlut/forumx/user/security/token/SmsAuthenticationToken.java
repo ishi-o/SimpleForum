@@ -8,19 +8,19 @@ import org.springframework.security.core.GrantedAuthority;
 import lombok.Getter;
 
 @Getter
-public class PasswordAuthenticationToken extends AbstractAuthenticationToken {
+public class SmsAuthenticationToken extends AbstractAuthenticationToken {
 
 	private final Object principal;
 	private Object credentials;
 
-	public PasswordAuthenticationToken(String username, String password) {
+	public SmsAuthenticationToken(String username, String password) {
 		super(null);
 		this.principal = username;
 		this.credentials = password;
 		setAuthenticated(false);
 	}
 
-	public PasswordAuthenticationToken(Object principal, Object credentials,
+	public SmsAuthenticationToken(Object principal, Object credentials,
 			Collection<? extends GrantedAuthority> authorities) {
 		super(authorities);
 		this.principal = principal;

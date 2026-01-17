@@ -31,8 +31,10 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import com.dlut.forumx.user.security.converter.PasswordAuthenticationConverter;
+import com.dlut.forumx.user.security.converter.CodeRequestAuthenticationConverter;
+import com.dlut.forumx.user.security.provider.CodeRequestAuthenticationProvider;
 import com.dlut.forumx.user.security.provider.PasswordAuthenticationProvider;
+import com.dlut.forumx.user.security.provider.SmsAuthenticationProvider;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
@@ -46,7 +48,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AuthorizationServerConfig {
 
+	private final CodeRequestAuthenticationProvider codeRequestAuthenticationProvider;
 	private final PasswordAuthenticationProvider passwordAuthenticationProvider;
+	private final SmsAuthenticationProvider smsAuthenticationProvider;
 
 	@Bean
 	@Order(1)
@@ -71,14 +75,17 @@ public class AuthorizationServerConfig {
 				.securityMatcher(authorizationServerConfigurer.getEndpointsMatcher())
 				.with(authorizationServerConfigurer,
 						(cfg) -> {
-							cfg.tokenEndpoint(tokenEndpoint -> {
-								tokenEndpoint
-										.accessTokenRequestConverter(new PasswordAuthenticationConverter())
-										.authenticationProvider(passwordAuthenticationProvider);
+							cfg.authorizationEndpoint(authEndpoint -> {
+								authEndpoint
+										.authorizationRequestConverter(new CodeRequestAuthenticationConverter())
+										.authenticationProvider(codeRequestAuthenticationProvider)
+										.authenticationProvider(passwordAuthenticationProvider)
+										.authenticationProvider(smsAuthenticationProvider);
 							});
 							cfg.oidc(Customizer.withDefaults());
 						})
 				.authorizeHttpRequests((authorize) -> authorize.anyRequest().authenticated());
+
 		return http.build();
 	}
 

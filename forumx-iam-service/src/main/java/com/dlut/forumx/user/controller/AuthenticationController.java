@@ -1,8 +1,6 @@
 package com.dlut.forumx.user.controller;
 
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,10 +27,6 @@ public class AuthenticationController {
 
 	@Qualifier("emailVerificationService")
 	private final VerificationService emailVerificationService;
-
-	private final UserDetailsService userDetailsService;
-
-	private final AuthenticationManager authenticationManager;
 
 	@PostMapping("/register")
 	public ApiResponse<Void> register(@RequestBody RegisterRequest req) {
