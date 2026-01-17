@@ -33,6 +33,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.dlut.forumx.user.security.converter.CodeRequestAuthenticationConverter;
 import com.dlut.forumx.user.security.provider.CodeRequestAuthenticationProvider;
+import com.dlut.forumx.user.security.provider.EmailAuthenticationProvider;
 import com.dlut.forumx.user.security.provider.PasswordAuthenticationProvider;
 import com.dlut.forumx.user.security.provider.SmsAuthenticationProvider;
 import com.nimbusds.jose.jwk.JWKSet;
@@ -51,6 +52,7 @@ public class AuthorizationServerConfig {
 	private final CodeRequestAuthenticationProvider codeRequestAuthenticationProvider;
 	private final PasswordAuthenticationProvider passwordAuthenticationProvider;
 	private final SmsAuthenticationProvider smsAuthenticationProvider;
+	private final EmailAuthenticationProvider emailAuthenticationProvider;
 
 	@Bean
 	@Order(1)
@@ -80,7 +82,8 @@ public class AuthorizationServerConfig {
 										.authorizationRequestConverter(new CodeRequestAuthenticationConverter())
 										.authenticationProvider(codeRequestAuthenticationProvider)
 										.authenticationProvider(passwordAuthenticationProvider)
-										.authenticationProvider(smsAuthenticationProvider);
+										.authenticationProvider(smsAuthenticationProvider)
+										.authenticationProvider(emailAuthenticationProvider);
 							});
 							cfg.oidc(Customizer.withDefaults());
 						})

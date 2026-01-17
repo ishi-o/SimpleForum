@@ -10,6 +10,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.oauth2.server.authorization.authentication.OAuth2AuthorizationCodeRequestAuthenticationToken;
 import org.springframework.stereotype.Component;
 
+import com.dlut.forumx.user.security.token.EmailAuthenticationToken;
 import com.dlut.forumx.user.security.token.PasswordAuthenticationToken;
 import com.dlut.forumx.user.security.token.SmsAuthenticationToken;
 
@@ -54,6 +55,8 @@ public class CodeRequestAuthenticationProvider implements AuthenticationProvider
 			return new PasswordAuthenticationToken(username, credentials);
 		} else if ("otp:sms".equals(authType)) {
 			return new SmsAuthenticationToken(username, credentials);
+		} else if ("otp:email".equals(authType)) {
+			return new EmailAuthenticationToken(username, credentials);
 		} else {
 			throw new BadCredentialsException("Unsupported auth type: " + authType);
 		}
