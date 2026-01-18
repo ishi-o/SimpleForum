@@ -2,6 +2,7 @@ package com.dlut.forumx.user.model.security;
 
 import java.util.List;
 
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import lombok.Builder;
@@ -13,6 +14,14 @@ public class UserPrincipal implements UserDetails {
 	private Long userId;
 	private String username;
 	private String password;
-	private List<Authority> authorities;
+	private List<GrantedAuthority> authorities;
 
+	public static UserPrincipal createUserPrincipal(Long userId, String username, String password,
+			List<GrantedAuthority> authorities) {
+		return builder()
+				.userId(userId)
+				.username(username)
+				.authorities(authorities)
+				.build();
+	}
 }
