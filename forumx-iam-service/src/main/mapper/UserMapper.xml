@@ -20,4 +20,14 @@
         WHERE username = #{username} AND deleted_at IS NULL 
 	]]>
     </select>
+
+	<sql id="abc"></sql>
+
+	<select id="selectRolesById" resultType="com.dlut.forumx.user.model.entity.User">
+		<include refid="abc"></include>
+	</select>
+
+	<resultMap id="" type="com.dlut.forumx.user.model.entity.User">
+		<result typeHandler="com.dlut.forumx.user.model.entity.User" />
+	</resultMap>
 </mapper>
