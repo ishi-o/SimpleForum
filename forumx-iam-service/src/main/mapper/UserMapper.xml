@@ -17,7 +17,7 @@
         FROM users 
         WHERE username = #{username} AND deleted_at IS NULL 
 	</select>
-  <select id="selectByPhone" resultType="User">
+  <select id="selectByPhone" resultType="com.dlut.forumx.user.model.entity.User">
         SELECT user_id AS userId
                 , username AS username
                 , email AS email
@@ -33,7 +33,7 @@
         FROM users 
         WHERE phone = #{phone} AND deleted_at IS NULL 
     </select>
-  <select id="selectByEmail" resultType="User">
+  <select id="selectByEmail" resultType="com.dlut.forumx.user.model.entity.User">
         SELECT user_id AS userId
                 , username AS username
                 , email AS email
@@ -48,5 +48,15 @@
                 , deleted_at AS deletedAt
         FROM users 
         WHERE email = #{email} AND deleted_at IS NULL 
-    </select>
+	</select>
+  <select id="selectAuthoritiesById" resultType="com.dlut.forumx.user.model.entity.Role">
+		SELECT r.role_id AS roleId
+			, role_code AS roleCode
+			, role_name AS roleName
+			, description AS description
+			, created_at AS createdAt
+		FROM roles AS r 
+		INNER JOIN user_roles AS ur ON r.role_id = ur.role_id
+		WHERE ur.user_id = #{id}
+	</select>
 </mapper>

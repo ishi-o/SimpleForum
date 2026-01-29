@@ -14,10 +14,10 @@ public class UserPrincipal implements UserDetails {
 	private Long userId;
 	private String username;
 	private String password;
-	private List<GrantedAuthority> authorities;
+	private List<? extends GrantedAuthority> authorities;
 
 	public static UserPrincipal createUserPrincipal(Long userId, String username, String password,
-			List<GrantedAuthority> authorities) {
+			List<? extends GrantedAuthority> authorities) {
 		return builder()
 				.userId(userId)
 				.username(username)

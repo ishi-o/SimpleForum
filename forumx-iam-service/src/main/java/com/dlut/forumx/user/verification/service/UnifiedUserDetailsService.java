@@ -2,11 +2,13 @@ package com.dlut.forumx.user.verification.service;
 
 import java.util.List;
 
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.dlut.forumx.user.mapper.UserMapper;
+import com.dlut.forumx.user.model.entity.Role;
 import com.dlut.forumx.user.model.entity.User;
 import com.dlut.forumx.user.model.security.UserPrincipal;
 import com.dlut.forumx.user.verification.mq.VerificationMessage.VerificationType;
@@ -27,6 +29,10 @@ public class UnifiedUserDetailsService {
 		};
 		Long userId = user.getUserId();
 		String password = user.getPassword();
-		return UserPrincipal.createUserPrincipal(userId, id, password, List.of());
+		List<Role> roles = userMapper.selectAuthoritiesById(userId);
+		return UserPrincipal.createUserPrincipal(userId, id, password,
+				roles.stream()
+						.map(r -> new SimpleGrantedAuthority(r.getRoleCode()))
+						.toList());
 	}
 }
