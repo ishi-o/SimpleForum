@@ -2,7 +2,7 @@
 set -e
 
 PROJECT_DIR="$PWD"
-SERVICES=("forumx-api-gateway" "forumx-commons" "forumx-content-service" "forumx-user-service")
+SERVICES=("forumx-api-gateway" "forumx-commons" "forumx-content-service")
 DOCKER_COMPOSE_DIR="$PROJECT_DIR/docker"
 
 if ! docker-compose -f "$DOCKER_COMPOSE_DIR/docker-compose.yml" ps --services --filter "status=running" | grep -q .; then

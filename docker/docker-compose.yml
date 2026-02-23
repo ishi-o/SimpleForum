@@ -111,9 +111,9 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-    depends_on:
-      network-ready:
-        condition: service_started
+    # depends_on:
+    #   network-ready:
+    #     condition: service_started
 
   minio:
     image: minio/minio:latest
