@@ -5,6 +5,8 @@ target/
 !**/src/test/**/target/
 logs/
 .flattened-pom.xml
+plugins/
+.env
 
 ### STS ###
 .apt_generated

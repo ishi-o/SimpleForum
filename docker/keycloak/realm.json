@@ -1,0 +1,55 @@
+{
+    "realm": "forumx-realm",
+    "enabled": true,
+    "registrationAllowed": true,
+    "registrationEmailAsUsername": false,
+    "loginWithEmailAllowed": true,
+    "duplicateEmailsAllowed": false,
+    "resetPasswordAllowed": true,
+    "verifyEmail": true,
+    "requiredCredentials": [
+        "password"
+    ],
+    "clients": [
+        {
+            "clientId": "gateway-client",
+            "enabled": true,
+            "secret": "your-client-secret",
+            "redirectUris": [
+                "http://localhost:9000/login/oauth2/code/keycloak"
+            ],
+            "webOrigins": [
+                "+"
+            ],
+            "standardFlowEnabled": true,
+            "directAccessGrantsEnabled": true,
+            "publicClient": false
+        }
+    ],
+    "users": [
+        {
+            "username": "admin",
+            "enabled": true,
+            "email": "admin@forumx.com",
+            "credentials": [
+                {
+                    "type": "password",
+                    "value": "admin123"
+                }
+            ],
+            "realmRoles": [
+                "admin"
+            ]
+        }
+    ],
+    "roles": {
+        "realm": [
+            {
+                "name": "admin"
+            },
+            {
+                "name": "user"
+            }
+        ]
+    }
+}

@@ -23,13 +23,6 @@ spring:
           lower-case-service-id: true
 
       routes:
-        - id: user-service
-          uri: lb://user-service
-          predicates:
-            - Path=/api/users/**
-          filters:
-            - StripPrefix=2
-
         - id: content-service
           uri: lb://content-service
           predicates:
@@ -39,6 +32,25 @@ spring:
 
       default-filters:
         - AddRequestHeader=X-Request-Gateway, gateway-service
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://forumx-keycloak:8080/realms/forumx-realm
+      client:
+        registration:
+          gateway-client:
+            provider: keycloak
+            client-id: gateway-client
+            client-secret: your-client-secret
+            authorization-grant-type: authorization_code
+            redirect-uri: http://localhost:9000/login/oauth2/code/keycloak
+            scope: openid,profile,email
+        provider:
+          keycloak:
+            issuer-uri: http://forumx-keycloak:8080/realms/forumx-realm
+            user-name-attribute: preferred_username
 
 logging:
   level:
