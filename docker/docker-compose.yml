@@ -153,6 +153,7 @@ services:
 
       KC_HOSTNAME: localhost
       KC_HOSTNAME_STRICT: "false"
+      KC_HOSTNAME_STRICT_HTTPS: "false"
 
       KC_IMPORT: /opt/keycloak/data/import/realm.json
 

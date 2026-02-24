@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: 9000
 
 spring:
   config:
@@ -29,6 +29,11 @@ spring:
             - Path=/api/contents/**
           filters:
             - StripPrefix=2
+            - name: JwtToHeaderFilter
+              args:
+                userIdClaim: sub
+                usernameClaim: preferred_username
+                rolesClaim: realm_access.roles
 
       default-filters:
         - AddRequestHeader=X-Request-Gateway, gateway-service
@@ -38,6 +43,7 @@ spring:
       resourceserver:
         jwt:
           issuer-uri: http://forumx-keycloak:8080/realms/forumx-realm
+          jwk-set-uri: http://forumx-keycloak:8080/realms/forumx-realm/protocol/openid-connect/certs
       client:
         registration:
           gateway-client:
