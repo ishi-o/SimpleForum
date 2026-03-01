@@ -12,29 +12,60 @@
   <version>${revision}</version>
   <packaging>pom</packaging>
   <name>forumx</name>
-  <description>Extensible forum</description>
+  <description>Extensible forum microservices platform</description>
   <modules>
-    <module>forumx-api-gateway</module>
-    <module>forumx-content-service</module>
+    <!-- 基础模块 -->
     <module>forumx-commons</module>
+    <module>forumx-api</module>
+    <!-- 业务服务 -->
+    <module>forumx-gateway</module>
+    <module>forumx-user-service</module>
+    <module>forumx-content-service</module>
+    <module>forumx-interaction-service</module>
+    <module>forumx-search-service</module>
+    <module>forumx-file-service</module>
+    <module>forumx-recommend-service</module>
   </modules>
   <properties>
-    <revision>0.1.0-SNAPSHOT</revision>
+    <!-- 项目版本 -->
+    <revision>0.2.0-SNAPSHOT</revision>
     <java.version>21</java.version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <!-- Spring Cloud 版本 -->
     <spring-cloud.version>2025.0.1</spring-cloud.version>
     <spring-cloud-alibaba.version>2025.0.0.0</spring-cloud-alibaba.version>
+    <!-- 数据库相关 -->
     <mysql.version>8.0.33</mysql.version>
     <mybatis.version>3.0.5</mybatis.version>
-    <pagehelper.version>1.4.7</pagehelper.version>
-    <logstash-logback.version>7.4</logstash-logback.version>
-    <lombok.version>1.18.30</lombok.version>
+    <pagehelper.version>2.1.0</pagehelper.version>
+    <dynamic-datasource.version>4.3.1</dynamic-datasource.version>
+    <!-- 中间件客户端 -->
+    <rocketmq.version>2.3.5</rocketmq.version>
+    <minio.version>8.5.14</minio.version>
+    <keycloak.version>24.0.4</keycloak.version>
+    <!-- 工具类 -->
+    <lombok.version>1.18.36</lombok.version>
+    <hutool.version>5.8.29</hutool.version>
+    <guava.version>33.4.0-jre</guava.version>
+    <commons-pool2.version>2.11.1</commons-pool2.version>
+    <commons-lang3.version>3.17.0</commons-lang3.version>
+    <commons-io.version>2.18.0</commons-io.version>
+    <mapstruct.version>1.6.3</mapstruct.version>
+    <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
+    <thumbnailator.version>0.4.20</thumbnailator.version>
+    <!-- 日志 -->
+    <logstash-logback.version>8.0</logstash-logback.version>
+    <!-- 文档 -->
+    <knife4j.version>4.5.0</knife4j.version>
+    <!-- 插件 -->
     <flatten-maven-plugin.version>1.5.0</flatten-maven-plugin.version>
-    <flatten.skip>true</flatten.skip>
-    <aliyun-sdk.version>4.6.3</aliyun-sdk.version>
-    <aliyun-smsapi.version>2.2.1</aliyun-smsapi.version>
+    <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
+    <maven-surefire-plugin.version>3.5.2</maven-surefire-plugin.version>
   </properties>
   <dependencyManagement>
     <dependencies>
+      <!-- Spring Cloud 依赖管理 -->
       <dependency>
         <groupId>org.springframework.cloud</groupId>
         <artifactId>spring-cloud-dependencies</artifactId>
@@ -42,6 +73,7 @@
         <type>pom</type>
         <scope>import</scope>
       </dependency>
+      <!-- Spring Cloud Alibaba 依赖管理 -->
       <dependency>
         <groupId>com.alibaba.cloud</groupId>
         <artifactId>spring-cloud-alibaba-dependencies</artifactId>
@@ -49,46 +81,132 @@
         <type>pom</type>
         <scope>import</scope>
       </dependency>
+      <!-- 模块间依赖 -->
+      <dependency>
+        <groupId>com.dlut.forumx</groupId>
+        <artifactId>forumx-commons</artifactId>
+        <version>${revision}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.dlut.forumx</groupId>
+        <artifactId>forumx-api</artifactId>
+        <version>${revision}</version>
+      </dependency>
+      <!-- MyBatis & 数据库 -->
+      <dependency>
+        <groupId>org.mybatis.spring.boot</groupId>
+        <artifactId>mybatis-spring-boot-starter</artifactId>
+        <version>${mybatis.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.github.pagehelper</groupId>
+        <artifactId>pagehelper-spring-boot-starter</artifactId>
+        <version>${pagehelper.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.baomidou</groupId>
+        <artifactId>dynamic-datasource-spring-boot-starter</artifactId>
+        <version>${dynamic-datasource.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>mysql</groupId>
+        <artifactId>mysql-connector-java</artifactId>
+        <version>${mysql.version}</version>
+      </dependency>
+      <!-- RocketMQ -->
+      <dependency>
+        <groupId>org.apache.rocketmq</groupId>
+        <artifactId>rocketmq-spring-boot-starter</artifactId>
+        <version>${rocketmq.version}</version>
+      </dependency>
+      <!-- MinIO -->
+      <dependency>
+        <groupId>io.minio</groupId>
+        <artifactId>minio</artifactId>
+        <version>${minio.version}</version>
+      </dependency>
+      <!-- Keycloak -->
+      <dependency>
+        <groupId>org.keycloak</groupId>
+        <artifactId>keycloak-spring-boot-starter</artifactId>
+        <version>${keycloak.version}</version>
+      </dependency>
+      <!-- 工具类 -->
+      <dependency>
+        <groupId>cn.hutool</groupId>
+        <artifactId>hutool-all</artifactId>
+        <version>${hutool.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.guava</groupId>
+        <artifactId>guava</artifactId>
+        <version>${guava.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-lang3</artifactId>
+        <version>${commons-lang3.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>commons-io</groupId>
+        <artifactId>commons-io</artifactId>
+        <version>${commons-io.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>net.coobird</groupId>
+        <artifactId>thumbnailator</artifactId>
+        <version>${thumbnailator.version}</version>
+      </dependency>
+      <!-- MapStruct -->
+      <dependency>
+        <groupId>org.mapstruct</groupId>
+        <artifactId>mapstruct</artifactId>
+        <version>${mapstruct.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.mapstruct</groupId>
+        <artifactId>mapstruct-processor</artifactId>
+        <version>${mapstruct.version}</version>
+        <scope>provided</scope>
+      </dependency>
+      <!-- 日志 -->
+      <dependency>
+        <groupId>net.logstash.logback</groupId>
+        <artifactId>logstash-logback-encoder</artifactId>
+        <version>${logstash-logback.version}</version>
+      </dependency>
+      <!-- API文档 -->
+      <dependency>
+        <groupId>com.github.xiaoymin</groupId>
+        <artifactId>knife4j-openapi3-jakarta-spring-boot-starter</artifactId>
+        <version>${knife4j.version}</version>
+      </dependency>
+      <!-- 认证授权客户端 -->
+      <!-- <dependency> -->
+      <!--   <groupId>org.springframework.boot</groupId> -->
+      <!--   <artifactId>spring-boot-starter-oauth2-resource-server</artifactId> -->
+      <!--   <version>${project.parent.version}</version> -->
+      <!-- </dependency> -->
+      <!-- <dependency> -->
+      <!--   <groupId>org.springframework.boot</groupId> -->
+      <!--   <artifactId>spring-boot-starter-oauth2-client</artifactId> -->
+      <!--   <version>${project.parent.version}</version> -->
+      <!-- </dependency> -->
+      <!-- 服务监控 -->
+      <dependency>
+        <groupId>io.micrometer</groupId>
+        <artifactId>micrometer-tracing-bridge-brave</artifactId>
+      </dependency>
+      <dependency>
+        <groupId>io.zipkin.reporter2</groupId>
+        <artifactId>zipkin-reporter-brave</artifactId>
+      </dependency>
     </dependencies>
   </dependencyManagement>
   <dependencies>
-    <!-- Spring Cloud Alibaba -->
-    <dependency>
-      <groupId>com.alibaba.cloud</groupId>
-      <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
-    </dependency>
-    <!-- Logger -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-logging</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>net.logstash.logback</groupId>
-      <artifactId>logstash-logback-encoder</artifactId>
-      <version>${logstash-logback.version}</version>
-    </dependency>
-    <!-- Spring Boot Devtools -->
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-devtools</artifactId>
-      <scope>runtime</scope>
-      <optional>true</optional>
-    </dependency>
-    <!-- Spring Cache -->
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-cache</artifactId>
-    </dependency>
-    <!-- Spring Test -->
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-test</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.cloud</groupId>
-      <artifactId>spring-cloud-starter-contract-stub-runner</artifactId>
-      <scope>test</scope>
+      <artifactId>spring-boot-starter</artifactId>
     </dependency>
     <!-- Lombok -->
     <dependency>
@@ -97,27 +215,126 @@
       <version>${lombok.version}</version>
       <scope>provided</scope>
     </dependency>
-    <!-- Spring Boot Actuator -->
+    <!-- 配置处理器 -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-configuration-processor</artifactId>
+      <optional>true</optional>
+    </dependency>
+    <!-- 基础测试框架 -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>org.junit.vintage</groupId>
+          <artifactId>junit-vintage-engine</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <!-- 常用工具类 -->
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>cn.hutool</groupId>
+      <artifactId>hutool-all</artifactId>
+    </dependency>
+    <!-- 日志 -->
+    <dependency>
+      <groupId>net.logstash.logback</groupId>
+      <artifactId>logstash-logback-encoder</artifactId>
+    </dependency>
+    <!-- 服务监控 -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-actuator</artifactId>
     </dependency>
-    <!-- Sentinel -->
+    <!-- 服务注册发现 -->
+    <dependency>
+      <groupId>com.alibaba.cloud</groupId>
+      <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+    </dependency>
+    <!-- 配置中心 -->
+    <dependency>
+      <groupId>com.alibaba.cloud</groupId>
+      <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
+    </dependency>
+    <!-- 服务容错 -->
     <dependency>
       <groupId>com.alibaba.cloud</groupId>
       <artifactId>spring-cloud-starter-alibaba-sentinel</artifactId>
-    </dependency>
-    <!-- Mysql Driver -->
-    <dependency>
-      <groupId>mysql</groupId>
-      <artifactId>mysql-connector-java</artifactId>
-      <version>${mysql.version}</version>
-      <scope>runtime</scope>
     </dependency>
   </dependencies>
   <build>
     <pluginManagement>
       <plugins>
+        <!-- 编译插件 -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>${maven-compiler-plugin.version}</version>
+          <configuration>
+            <source>${java.version}</source>
+            <target>${java.version}</target>
+            <encoding>${project.build.sourceEncoding}</encoding>
+            <annotationProcessorPaths>
+              <path>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok.version}</version>
+              </path>
+              <path>
+                <groupId>org.mapstruct</groupId>
+                <artifactId>mapstruct-processor</artifactId>
+                <version>${mapstruct.version}</version>
+              </path>
+              <path>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok-mapstruct-binding</artifactId>
+                <version>${lombok-mapstruct-binding.version}</version>
+              </path>
+              <path>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-configuration-processor</artifactId>
+              </path>
+            </annotationProcessorPaths>
+            <compilerArgs>
+              <arg>-parameters</arg>
+            </compilerArgs>
+          </configuration>
+        </plugin>
+        <!-- Spring Boot 插件 -->
+        <plugin>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-maven-plugin</artifactId>
+          <configuration>
+            <excludes>
+              <exclude>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+              </exclude>
+            </excludes>
+          </configuration>
+          <executions>
+            <execution>
+              <goals>
+                <goal>repackage</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+        <!-- Flatten 插件 -->
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>flatten-maven-plugin</artifactId>
@@ -125,31 +342,35 @@
           <configuration>
             <flattenMode>resolveCiFriendliesOnly</flattenMode>
             <updatePomFile>true</updatePomFile>
-            <excludePomFiles>
-              <excludePomFile>api-gateway/pom.xml</excludePomFile>
-              <excludePomFile>content-service/pom.xml</excludePomFile>
-              <excludePomFile>user-service/pom.xml</excludePomFile>
-            </excludePomFiles>
-            <skip>${flatten.skip}</skip>
           </configuration>
           <executions>
             <execution>
-              <id>flatten.verify</id>
-              <phase>verify</phase>
+              <id>flatten</id>
+              <phase>process-resources</phase>
               <goals>
                 <goal>flatten</goal>
               </goals>
-              <configuration>
-                <skip>false</skip>
-              </configuration>
+            </execution>
+            <execution>
+              <id>flatten.clean</id>
+              <phase>clean</phase>
+              <goals>
+                <goal>clean</goal>
+              </goals>
             </execution>
           </executions>
         </plugin>
+        <!-- 测试插件 -->
         <plugin>
-          <groupId>org.springframework.boot</groupId>
-          <artifactId>spring-boot-maven-plugin</artifactId>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>${maven-surefire-plugin.version}</version>
           <configuration>
-            <skip>true</skip>
+            <skipTests>false</skipTests>
+            <includes>
+              <include>**/*Test.java</include>
+              <include>**/*Tests.java</include>
+            </includes>
           </configuration>
         </plugin>
       </plugins>
@@ -160,5 +381,55 @@
         <artifactId>flatten-maven-plugin</artifactId>
       </plugin>
     </plugins>
+    <!-- 资源过滤配置 -->
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>true</filtering>
+        <includes>
+          <include>**/*.yml</include>
+          <include>**/*.yaml</include>
+          <include>**/*.properties</include>
+          <include>**/banner.txt</include>
+        </includes>
+      </resource>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>false</filtering>
+        <excludes>
+          <exclude>**/*.yml</exclude>
+          <exclude>**/*.yaml</exclude>
+          <exclude>**/*.properties</exclude>
+          <exclude>**/banner.txt</exclude>
+        </excludes>
+      </resource>
+    </resources>
   </build>
+  <!-- 开发环境配置 -->
+  <profiles>
+    <profile>
+      <id>dev</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <properties>
+        <profiles.active>dev</profiles.active>
+        <logging.level>DEBUG</logging.level>
+      </properties>
+    </profile>
+    <profile>
+      <id>test</id>
+      <properties>
+        <profiles.active>test</profiles.active>
+        <logging.level>INFO</logging.level>
+      </properties>
+    </profile>
+    <profile>
+      <id>prod</id>
+      <properties>
+        <profiles.active>prod</profiles.active>
+        <logging.level>WARN</logging.level>
+      </properties>
+    </profile>
+  </profiles>
 </project>

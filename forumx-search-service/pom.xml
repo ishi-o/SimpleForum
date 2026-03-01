@@ -7,10 +7,10 @@
     <version>${revision}</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
-  <artifactId>forumx-content-service</artifactId>
+  <artifactId>forumx-search-service</artifactId>
   <packaging>jar</packaging>
-  <name>forumx-content-service</name>
-  <description>Content Service</description>
+  <name>forumx-search-service</name>
+  <description>Search Service - 全文检索、索引同步、热搜榜单</description>
   <dependencies>
     <!-- 模块间依赖 -->
     <dependency>
@@ -25,6 +25,15 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+    <!-- Elasticsearch 核心依赖 -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-data-elasticsearch</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>co.elastic.clients</groupId>
+      <artifactId>elasticsearch-java</artifactId>
     </dependency>
     <!-- Redis -->
     <dependency>

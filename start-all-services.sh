@@ -2,10 +2,18 @@
 set -e
 
 PROJECT_DIR="$PWD"
-SERVICES=("forumx-api-gateway" "forumx-commons" "forumx-content-service")
+SERVICES=(
+	"forumx-gateway"
+	"forumx-user-service"
+	"forumx-content-service"
+	"forumx-interaction-service"
+	"forumx-search-service"
+	"forumx-file-service"
+	"forumx-recommend-service"
+)
 DOCKER_COMPOSE_DIR="$PROJECT_DIR/docker"
 
-if ! docker-compose -f "$DOCKER_COMPOSE_DIR/docker-compose.yml" ps --services --filter "status=running" | grep -q .; then
+if ! docker-compose -f "$DOCKER_COMPOSE_DIR/docker-compose.yml" ps --services --filter "status=running" 2>/dev/null | grep -q .; then
 	echo "Starting docker-compose services..."
 	cd "$DOCKER_COMPOSE_DIR" && docker-compose up -d >/dev/null 2>&1
 	cd "$PROJECT_DIR"

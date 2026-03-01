@@ -7,10 +7,10 @@
     <version>${revision}</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
-  <artifactId>forumx-content-service</artifactId>
+  <artifactId>forumx-interaction-service</artifactId>
   <packaging>jar</packaging>
-  <name>forumx-content-service</name>
-  <description>Content Service</description>
+  <name>forumx-interaction-service</name>
+  <description>Interaction Service</description>
   <dependencies>
     <!-- 模块间依赖 -->
     <dependency>

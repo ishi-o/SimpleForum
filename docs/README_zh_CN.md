@@ -24,11 +24,11 @@
 | 服务网关       | Spring Cloud Gateway          | 路由、鉴权、限流     |
 | ORM框架        | MyBatis                       | 数据库访问           |
 | 数据库         | MySQL 8.0                     | 业务数据存储         |
-| 缓存           | Redis 6.x                     | 缓存、计数、收件箱   |
+| 缓存           | Redis 7.x                     | 缓存、计数、收件箱   |
 | 消息队列       | RocketMQ                      | 异步解耦、最终一致性 |
 | 搜索引擎       | Elasticsearch                 | 全文检索             |
 | 对象存储       | MinIO                         | 图片、文件存储       |
-| 认证授权       | Keycloak 22.0                 | OAuth2/JWT认证       |
+| 认证授权       | Keycloak                      | OAuth2/JWT认证       |
 | 实时推送       | SSE                           | 通知实时推送         |
 | AI推荐         | LangChain4j + EasyRec         | 个性化推荐           |
 | 容器化         | Docker + Docker Compose       | 部署编排             |
