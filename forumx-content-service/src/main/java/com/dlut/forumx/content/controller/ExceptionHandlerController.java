@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import com.dlut.forumx.content.dto.response.ApiResponse;
-import com.dlut.forumx.content.dto.response.ErrorResponse;
+import com.dlut.forumx.common.content.dto.response.ErrorResponse;
+import com.dlut.forumx.common.dto.ApiResponse;
 
 @RestControllerAdvice
 public class ExceptionHandlerController {

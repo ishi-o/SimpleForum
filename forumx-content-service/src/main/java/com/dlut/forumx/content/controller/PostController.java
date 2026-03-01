@@ -2,6 +2,7 @@ package com.dlut.forumx.content.controller;
 
 import java.util.List;
 
+import org.apache.seata.common.result.PageResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,12 +13,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.SessionAttribute;
 
-import com.dlut.forumx.content.dto.request.PostCreateRequest;
-import com.dlut.forumx.content.dto.response.ApiResponse;
-import com.dlut.forumx.content.dto.response.PostDto;
-import com.dlut.forumx.content.dto.result.PageResult;
+import com.dlut.forumx.common.content.dto.request.PostCreateRequest;
+import com.dlut.forumx.common.content.dto.response.PostDto;
+import com.dlut.forumx.common.dto.ApiResponse;
 import com.dlut.forumx.content.entity.Post;
-import com.dlut.forumx.content.entity.User.UserRole;
 import com.dlut.forumx.content.service.PostService;
 
 import jakarta.validation.constraints.Positive;

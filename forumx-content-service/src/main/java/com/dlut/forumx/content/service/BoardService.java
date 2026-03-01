@@ -2,17 +2,13 @@ package com.dlut.forumx.content.service;
 
 import java.util.List;
 
-import org.springframework.stereotype.Service;
-
-import com.dlut.forumx.content.dto.result.PageResult;
+import com.dlut.forumx.common.content.dto.result.PageResult;
 import com.dlut.forumx.content.entity.Board;
-import com.dlut.forumx.content.entity.User.UserRole;
 
 /**
  * @author Ishi_O
  * @since
  */
-@Service
 public interface BoardService {
 	PageResult<Board> getAllBoards(Integer pageNumber, Integer pageSize);
 

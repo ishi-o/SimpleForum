@@ -6,5 +6,13 @@ CREATE USER IF NOT EXISTS 'content_service'@'%' IDENTIFIED BY 'C0nt3ntSrv@2025!d
 GRANT ALL PRIVILEGES ON content_db.* TO 'content_service'@'%';
 FLUSH PRIVILEGES;
 
+-- content_db
+CREATE DATABASE IF NOT EXISTS user_db DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+CREATE USER IF NOT EXISTS 'user_service'@'%' IDENTIFIED BY 'U3eR@2025!db';
+
+GRANT ALL PRIVILEGES ON user_db.* TO 'user_service'@'%';
+FLUSH PRIVILEGES;
+
 -- keycloak
 CREATE DATABASE IF NOT EXISTS keycloak DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;

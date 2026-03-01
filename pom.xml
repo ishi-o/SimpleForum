@@ -25,6 +25,7 @@
     <spring-cloud-alibaba.version>2025.0.0.0</spring-cloud-alibaba.version>
     <mysql.version>8.0.33</mysql.version>
     <mybatis.version>3.0.5</mybatis.version>
+    <pagehelper.version>1.4.7</pagehelper.version>
     <logstash-logback.version>7.4</logstash-logback.version>
     <lombok.version>1.18.30</lombok.version>
     <flatten-maven-plugin.version>1.5.0</flatten-maven-plugin.version>

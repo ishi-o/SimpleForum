@@ -9,18 +9,11 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.dlut.forumx.content.dto.result.PageResult;
+import com.dlut.forumx.common.content.dto.result.PageResult;
 import com.dlut.forumx.content.entity.Board;
-import com.dlut.forumx.content.entity.User;
-import com.dlut.forumx.content.entity.User.UserRole;
-import com.dlut.forumx.content.repository.BoardRepository;
-import com.dlut.forumx.content.service.BoardService;
-import com.dlut.forumx.content.util.EntityReferenceUtils;
-import com.dlut.forumx.content.util.MessageSourceUtils;
-import com.dlut.forumx.content.util.PermissionUtils;
-
-import jakarta.transaction.Transactional;
+import com.dlut.forumx.content.mapper.BoardMapper;
 
 /**
  * @author Ishi_O
@@ -30,35 +23,35 @@ import jakarta.transaction.Transactional;
 @Transactional
 public class BoardServiceImpl implements BoardService {
 
-	private final BoardRepository boardRepository;
+	private final BoardMapper boardMapper;
 
-	public BoardServiceImpl(BoardRepository boardRepository) {
-		this.boardRepository = boardRepository;
+	public BoardServiceImpl(BoardMapper boardMapper) {
+		this.boardMapper = boardMapper;
 	}
 
 	@Cacheable(cacheNames = "boards:page", key = "#pageNumber + ':' + #pageSize")
 	@Override
 	public PageResult<Board> getAllBoards(Integer pageNumber, Integer pageSize) {
-		return PageResult.from(boardRepository.findAll(PageRequest.of(pageNumber, pageSize)));
+		return PageResult.from(boardMapper.findAll(PageRequest.of(pageNumber, pageSize)));
 	}
 
 	@Override
 	public PageResult<Board> getLikelyBoards(List<String> keywords, Integer pageNumber, Integer pageSize) {
 		String keywordPattern = keywords.stream().collect(Collectors.joining("%"));
-		return PageResult.from(boardRepository.findByNameOrDescriptionContaining(keywordPattern,
+		return PageResult.from(boardMapper.findByNameOrDescriptionContaining(keywordPattern,
 				PageRequest.of(pageNumber, pageSize)));
 	}
 
 	@Cacheable(cacheNames = "boards:user:page", key = "#uid + ':' + #pageNumber + ':' + #pageSize")
 	@Override
 	public PageResult<Board> getBoardsByUid(Long uid, Integer pageNumber, Integer pageSize) {
-		return PageResult.from(boardRepository.findAllByModeratorUid(uid, PageRequest.of(pageNumber, pageSize)));
+		return PageResult.from(boardMapper.findAllByModeratorUid(uid, PageRequest.of(pageNumber, pageSize)));
 	}
 
 	@Cacheable(cacheNames = "boards", key = "#bid")
 	@Override
 	public Board getSpecifiedBoard(Long bid) {
-		return boardRepository.findById(bid).orElseThrow(
+		return boardMapper.findById(bid).orElseThrow(
 				() -> new IllegalArgumentException(MessageSourceUtils.getMessage("error.board.not-found", null)));
 	}
 
@@ -66,7 +59,7 @@ public class BoardServiceImpl implements BoardService {
 	@Override
 	public Board createBoard(String name, String description, Long uid) {
 		Board board = new Board(name, description, EntityReferenceUtils.getReferenceById(User.class, uid));
-		boardRepository.save(board);
+		boardMapper.save(board);
 		return board;
 	}
 
@@ -77,7 +70,7 @@ public class BoardServiceImpl implements BoardService {
 	})
 	@Override
 	public Board updateBoard(Long bid, String name, String description, Long uid, Long editorUid, UserRole userRole) {
-		Board board = boardRepository.findById(bid).orElseThrow(
+		Board board = boardMapper.findById(bid).orElseThrow(
 				() -> new IllegalArgumentException(MessageSourceUtils.getMessage("error.board.not-found", null)));
 		if (!board.getModerator().getUid().equals(editorUid)) {
 			PermissionUtils.isNotRoleThenThrow(UserRole.ADMIN, userRole);
@@ -94,11 +87,11 @@ public class BoardServiceImpl implements BoardService {
 	})
 	@Override
 	public void deleteBoard(Long bid, Long editorUid, UserRole editorRole) {
-		Board board = boardRepository.findById(bid).orElseThrow(
+		Board board = boardMapper.findById(bid).orElseThrow(
 				() -> new IllegalArgumentException(MessageSourceUtils.getMessage("error.board.not-found", null)));
 		if (!board.getModerator().getUid().equals(editorUid)) {
 			PermissionUtils.isNotRoleThenThrow(UserRole.ADMIN, editorRole);
 		}
-		boardRepository.deleteById(bid);
+		boardMapper.deleteById(bid);
 	}
 }
