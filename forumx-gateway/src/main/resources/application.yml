@@ -1,0 +1,48 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: forumx-gateway
+
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+        namespace: public
+      config:
+        server-addr: localhost:8848
+        file-extension: yaml
+
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+
+    sentinel:
+      transport:
+        dashboard: localhost:8080
+      eager: true
+      scg:
+        fallback:
+          mode: response
+          response-body: '{"code":429,"message":"系统繁忙，请稍后再试"}'
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://localhost:8080/realms/forumx/protocol/openid-connect/certs
+
+logging:
+  level:
+    "[com.dlut.forumx]": DEBUG
+    "[org.springframework.cloud.gateway]": INFO
+    "[org.springframework.security]": INFO
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics

@@ -6,7 +6,8 @@ volumes:
   mysql-data:
   nacos-data:
   redis-data:
-  rocketmq-data:
+  rocketmq-namesrv-data:
+  rocketmq-broker-data:
   elasticsearch-data:
   minio-data:
   keycloak-data:
@@ -64,9 +65,9 @@ services:
     environment:
       MODE: standalone
       MYSQL_SERVICE_HOST: mysql
-      MYSQL_SERVICE_DB_NAME: nacos
-      MYSQL_SERVICE_USER: root
-      MYSQL_SERVICE_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root}
+      MYSQL_SERVICE_DB_NAME: nacos_db
+      MYSQL_SERVICE_USER: nacos
+      MYSQL_SERVICE_PASSWORD: Nac0s@2025!db
     volumes:
       - nacos-data:/home/nacos/data
       - ./nacos/logs:/home/nacos/logs
@@ -90,15 +91,20 @@ services:
     volumes:
       - elasticsearch-data:/usr/share/elasticsearch/data
       - ./elasticsearch/plugins:/usr/share/elasticsearch/plugins
-      - ./elasticsearch/ik-install.sh:/usr/local/bin/ik-install.sh
     ulimits:
       memlock:
         soft: -1
         hard: -1
+    user: root
     command: >
       bash -c "
-        /usr/local/bin/ik-install.sh &&
-        /bin/tini -- /usr/local/bin/docker-entrypoint.sh eswrapper
+        if [ ! -d /usr/share/elasticsearch/plugins/analysis-ik ]; then
+          echo 'Installing IK Analyzer...' &&
+          elasticsearch-plugin install --batch https://release.infinilabs.com/analysis-ik/stable/elasticsearch-analysis-ik-8.11.1.zip &&
+          chown -R elasticsearch:elasticsearch /usr/share/elasticsearch/plugins
+        fi &&
+        echo 'Starting Elasticsearch...' &&
+        exec su elasticsearch -c '/bin/tini -- /usr/local/bin/docker-entrypoint.sh eswrapper'
       "
 
   rocketmq-namesrv:
@@ -110,7 +116,7 @@ services:
     ports:
       - "9876:9876"
     volumes:
-      - rocketmq-data:/home/rocketmq/store
+      - rocketmq-namesrv-data:/home/rocketmq/store
     command: sh mqnamesrv
 
   rocketmq-broker:
@@ -125,9 +131,22 @@ services:
     environment:
       NAMESRV_ADDR: rocketmq-namesrv:9876
     volumes:
-      - rocketmq-data:/home/rocketmq/store
+      - rocketmq-broker-data:/home/rocketmq/store
       - ./rocketmq/conf/broker.conf:/home/rocketmq/conf/broker.conf
-    command: sh mqbroker -c /home/rocketmq/conf/broker.conf
+    user: root
+    command: >
+      sh -c "
+        echo '========== Broker Starting ==========' &&
+        echo 'Creating directories...' &&
+        mkdir -p /home/rocketmq/store/commitlog &&
+        mkdir -p /home/rocketmq/logs &&
+        echo 'Directory structure:' &&
+        ls -la /home/rocketmq/store/ &&
+        echo 'Starting broker with config:' &&
+        cat /home/rocketmq/conf/broker.conf &&
+        echo 'Executing: mqbroker -c /home/rocketmq/conf/broker.conf' &&
+        exec sh mqbroker -c /home/rocketmq/conf/broker.conf
+      "
     depends_on:
       - rocketmq-namesrv
 
@@ -163,8 +182,8 @@ services:
     environment:
       KC_DB: mysql
       KC_DB_URL: jdbc:mysql://mysql:3306/keycloak
-      KC_DB_USERNAME: root
-      KC_DB_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root}
+      KC_DB_USERNAME: keycloak
+      KC_DB_PASSWORD: K3ycl0ak@2025!db
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:-admin}
       KC_HOSTNAME: localhost
