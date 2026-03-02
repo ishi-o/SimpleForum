@@ -1,0 +1,53 @@
+server:
+  port: 8085
+
+spring:
+  application:
+    name: search-service
+
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+        namespace: public
+        group: DEFAULT_GROUP
+
+  elasticsearch:
+    uris: http://localhost:9200
+    connection-timeout: 5000
+    socket-timeout: 30000
+
+  data:
+    elasticsearch:
+      repositories:
+        enabled: true
+
+rocketmq:
+  name-server: localhost:9876
+  producer:
+    group: search-producer-group
+    send-message-timeout: 3000
+    compress-message-body-threshold: 4096
+    max-message-size: 4194304
+    retry-times-when-send-failed: 2
+  consumer:
+    group: search-consumer-group
+    pull-batch-size: 10
+
+# 日志配置
+logging:
+  level:
+    "[com.dlut.forumx.search]": DEBUG
+    "[org.springframework.data.elasticsearch]": INFO
+    "[org.apache.rocketmq]": INFO
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: always
