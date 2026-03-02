@@ -1,5 +1,6 @@
 package com.dlut.forumx.user.controller;
 
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 import org.springframework.beans.BeanUtils;
@@ -23,47 +24,33 @@ import com.dlut.forumx.commons.dto.user.response.UserProfileDTO;
 import com.dlut.forumx.commons.dto.user.response.UserStatsDTO;
 import com.dlut.forumx.user.entity.User;
 import com.dlut.forumx.user.entity.UserStats;
-import com.dlut.forumx.user.service.FollowService;
 import com.dlut.forumx.user.service.UserService;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestController
 @RequestMapping("/users")
 @RequiredArgsConstructor
 public class UserController {
 
 	private final UserService userService;
-	private final FollowService followService;
 
 	/**
-	 * 从 JWT 中获取当前用户的业务ID
+	 * 辅助方法：从JWT获取当前用户
 	 */
-	private Long getCurrentUserId(Jwt jwt) {
-		String keycloakId = jwt.getSubject(); // Keycloak 用户ID
-		return userService.getUserIdByKeycloakId(keycloakId);
+	private User getCurrentUserFromJwt(Jwt jwt) {
+		if (jwt == null)
+			return null;
+		String keycloakId = jwt.getSubject();
+		return userService.getUserByKeycloakId(keycloakId);
 	}
 
 	/**
-	 * 获取用户资料
+	 * 辅助方法：User转UserProfileDTO
 	 */
-	@GetMapping("/profile/{userId}")
-	public ResultDTO<UserProfileDTO> getProfile(
-			@PathVariable Long userId,
-			@AuthenticationPrincipal Jwt jwt) {
-
-		// 当前登录用户（可能为 null）
-		Long currentUserId = jwt != null ? getCurrentUserId(jwt) : null;
-
-		// 查询目标用户
-		User user = userService.getUserById(userId);
-		if (user == null) {
-			return ResultDTO.error(404, "用户不存在");
-		}
-
-		UserStats stats = userService.getUserStats(userId);
-
-		// 转换为 DTO
+	private UserProfileDTO toUserProfileDTO(User user, UserStats stats, Boolean isFollowed) {
 		UserProfileDTO dto = new UserProfileDTO();
 		BeanUtils.copyProperties(user, dto);
 
@@ -78,11 +65,45 @@ public class UserController {
 			dto.setPostCount(stats.getPostCount());
 		}
 
-		// 查询关注状态
-		if (currentUserId != null && !currentUserId.equals(userId)) {
-			dto.setIsFollowed(followService.isFollowing(currentUserId, userId));
+		dto.setIsFollowed(isFollowed);
+		return dto;
+	}
+
+	/**
+	 * 获取当前登录用户信息
+	 */
+	@GetMapping("/me")
+	public ResultDTO<UserProfileDTO> getCurrentUser(@AuthenticationPrincipal Jwt jwt) {
+		User user = getCurrentUserFromJwt(jwt);
+		if (user == null) {
+			return ResultDTO.error(404, "用户不存在");
 		}
 
+		UserStats stats = userService.getUserStats(user.getId());
+		UserProfileDTO dto = toUserProfileDTO(user, stats, false);
+
+		return ResultDTO.success(dto);
+	}
+
+	/**
+	 * 获取用户资料
+	 */
+	@GetMapping("/profile/{userId}")
+	public ResultDTO<UserProfileDTO> getProfile(
+			@PathVariable Long userId,
+			@AuthenticationPrincipal Jwt jwt) {
+
+		User user = userService.getUserById(userId);
+		if (user == null) {
+			return ResultDTO.error(404, "用户不存在");
+		}
+
+		UserStats stats = userService.getUserStats(userId);
+
+		// 当前用户是否关注了目标用户（后续由FollowService实现）
+		Boolean isFollowed = false;
+
+		UserProfileDTO dto = toUserProfileDTO(user, stats, isFollowed);
 		return ResultDTO.success(dto);
 	}
 
@@ -94,9 +115,7 @@ public class UserController {
 			@AuthenticationPrincipal Jwt jwt,
 			@RequestBody UpdateProfileDTO dto) {
 
-		Long userId = getCurrentUserId(jwt);
-
-		User user = userService.getUserById(userId);
+		User user = getCurrentUserFromJwt(jwt);
 		if (user == null) {
 			return ResultDTO.error(404, "用户不存在");
 		}
@@ -109,7 +128,7 @@ public class UserController {
 		if (dto.getGender() != null)
 			user.setGender(dto.getGender());
 		if (dto.getBirthday() != null) {
-			user.setBirthday(java.time.LocalDate.parse(dto.getBirthday()));
+			user.setBirthday(LocalDate.parse(dto.getBirthday()));
 		}
 		if (dto.getLocation() != null)
 			user.setLocation(dto.getLocation());
@@ -120,8 +139,10 @@ public class UserController {
 
 		userService.updateUser(user);
 
-		// 返回更新后的资料
-		return getProfile(userId, jwt);
+		UserStats stats = userService.getUserStats(user.getId());
+		UserProfileDTO result = toUserProfileDTO(user, stats, false);
+
+		return ResultDTO.success(result);
 	}
 
 	/**
@@ -132,12 +153,14 @@ public class UserController {
 			@AuthenticationPrincipal Jwt jwt,
 			@RequestParam("file") MultipartFile file) {
 
-		Long userId = getCurrentUserId(jwt);
+		User user = getCurrentUserFromJwt(jwt);
+		if (user == null) {
+			return ResultDTO.error(404, "用户不存在");
+		}
 
-		// TODO: 调用 file-service 上传
-		String avatarUrl = "http://file-service/avatar/" + userId;
+		// TODO: 调用 file-service 上传，获取URL
+		String avatarUrl = "http://localhost:9000/avatars/" + user.getId() + ".jpg";
 
-		User user = userService.getUserById(userId);
 		user.setAvatar(avatarUrl);
 		userService.updateUser(user);
 
@@ -153,9 +176,11 @@ public class UserController {
 	 */
 	@DeleteMapping("/avatar")
 	public ResultDTO<Void> deleteAvatar(@AuthenticationPrincipal Jwt jwt) {
-		Long userId = getCurrentUserId(jwt);
+		User user = getCurrentUserFromJwt(jwt);
+		if (user == null) {
+			return ResultDTO.error(404, "用户不存在");
+		}
 
-		User user = userService.getUserById(userId);
 		user.setAvatar("");
 		userService.updateUser(user);
 
@@ -163,7 +188,7 @@ public class UserController {
 	}
 
 	/**
-	 * 获取用户统计信息
+	 * 获取用户统计
 	 */
 	@GetMapping("/stats/{userId}")
 	public ResultDTO<UserStatsDTO> getUserStats(@PathVariable Long userId) {
