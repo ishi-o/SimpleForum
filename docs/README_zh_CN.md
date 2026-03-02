@@ -45,7 +45,6 @@ forumx
 ├── file-service                # 文件服务 - 上传下载、图片处理
 ├── recommend-service           # 推荐服务 - 召回、排序、特征工程
 ├── commons                     # 公共模块 - DTO、常量、工具类、异常码
-├── api                         # API定义模块 - Feign客户端接口
 └── deploy                      # 部署配置 - docker-compose
 ```
 

@@ -14,10 +14,7 @@
   <name>forumx</name>
   <description>Extensible forum microservices platform</description>
   <modules>
-    <!-- 基础模块 -->
     <module>forumx-commons</module>
-    <module>forumx-api</module>
-    <!-- 业务服务 -->
     <module>forumx-gateway</module>
     <module>forumx-user-service</module>
     <module>forumx-content-service</module>
@@ -85,11 +82,6 @@
       <dependency>
         <groupId>com.dlut.forumx</groupId>
         <artifactId>forumx-commons</artifactId>
-        <version>${revision}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.dlut.forumx</groupId>
-        <artifactId>forumx-api</artifactId>
         <version>${revision}</version>
       </dependency>
       <!-- MyBatis & 数据库 -->

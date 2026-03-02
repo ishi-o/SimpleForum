@@ -17,10 +17,6 @@
       <groupId>com.dlut.forumx</groupId>
       <artifactId>forumx-commons</artifactId>
     </dependency>
-    <dependency>
-      <groupId>com.dlut.forumx</groupId>
-      <artifactId>forumx-api</artifactId>
-    </dependency>
     <!-- Spring Boot Web -->
     <dependency>
       <groupId>org.springframework.boot</groupId>

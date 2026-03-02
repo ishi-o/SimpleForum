@@ -1,0 +1,37 @@
+server:
+  port: 8084
+
+spring:
+  application:
+    name: file-service
+
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+        namespace: public
+
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://localhost:8080/realms/forumx/protocol/openid-connect/certs
+
+minio:
+  endpoint: http://localhost:9000
+  access-key: minioadmin
+  secret-key: minioadmin
+  bucket:
+    avatar: forumx-avatar
+    post: forumx-post
+    temp: forumx-temp
+  public-url: http://localhost:9000
+
+logging:
+  level:
+    "[com.dlut.forumx.file]": DEBUG
