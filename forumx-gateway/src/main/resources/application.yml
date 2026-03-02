@@ -20,6 +20,52 @@ spring:
           enabled: true
           lower-case-service-id: true
 
+      routes:
+        - id: user-service
+          uri: lb://user-service
+          predicates:
+            - Path=/api/v1/users/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: userServiceBreaker
+                fallbackUri: forward:/fallback/user
+            - name: RequestRateLimiter
+              args:
+                redis-rate-limiter.replenishRate: 100
+                redis-rate-limiter.burstCapacity: 200
+            - name: Retry
+              args:
+                retries: 3
+                statuses: BAD_GATEWAY, SERVICE_UNAVAILABLE
+                methods: GET
+                series: SERVER_ERROR
+
+        - id: content-service
+          uri: lb://content-service
+          predicates:
+            - Path=/api/v1/content/**
+
+        - id: interaction-service
+          uri: lb://interaction-service
+          predicates:
+            - Path=/api/v1/interaction/**
+
+        - id: search-service
+          uri: lb://search-service
+          predicates:
+            - Path=/api/v1/search/**
+
+        - id: file-service
+          uri: lb://file-service
+          predicates:
+            - Path=/api/v1/files/**
+
+        - id: recommend-service
+          uri: lb://recommend-service
+          predicates:
+            - Path=/api/v1/recommend/**
+
     sentinel:
       transport:
         dashboard: localhost:8080
@@ -29,20 +75,44 @@ spring:
           mode: response
           response-body: '{"code":429,"message":"系统繁忙，请稍后再试"}'
 
+      datasource:
+        ds1:
+          file:
+            file: classpath:flow-rules.json
+            data-type: json
+            rule-type: flow
+
   security:
     oauth2:
       resourceserver:
         jwt:
           jwk-set-uri: http://localhost:8080/realms/forumx/protocol/openid-connect/certs
 
+  redis:
+    host: localhost
+    port: 6379
+    database: 0
+    timeout: 5000ms
+    lettuce:
+      pool:
+        max-active: 8
+        max-idle: 8
+        min-idle: 0
+
 logging:
   level:
     "[com.dlut.forumx]": DEBUG
     "[org.springframework.cloud.gateway]": INFO
     "[org.springframework.security]": INFO
+    "[org.springframework.cloud.sentinel]": INFO
 
 management:
   endpoints:
     web:
       exposure:
-        include: health,info,metrics
+        include: health,info,metrics,gateway,sentinel
+  endpoint:
+    gateway:
+      enabled: true
+    sentinel:
+      enabled: true

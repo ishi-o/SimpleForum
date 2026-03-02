@@ -3,6 +3,8 @@ package com.dlut.forumx.gateway.handler;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -90,9 +92,11 @@ class GlobalExceptionHandlerTest {
 	void shouldHandleJsonProcessingException() throws JsonProcessingException {
 		RuntimeException ex = new RuntimeException("test");
 
-		when(objectMapper.writeValueAsBytes(any(ResultDTO.class)))
-				.thenThrow(new JsonProcessingException("JSON error") {
-				});
+		JsonProcessingException mockJsonEx = mock(JsonProcessingException.class);
+		when(mockJsonEx.getMessage()).thenReturn("JSON error");
+
+		doThrow(mockJsonEx)
+				.when(objectMapper).writeValueAsBytes(any(ResultDTO.class));
 
 		handler.handle(exchange, ex).block();
 
