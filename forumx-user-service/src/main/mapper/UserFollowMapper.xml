@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dlut.forumx.user.mapper.UserFollowMapper">
+
+    <!-- 实体映射 -->
+    <resultMap id="BaseResultMap" type="com.dlut.forumx.user.entity.UserFollow">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="follower_id" property="followerId" jdbcType="BIGINT"/>
+        <result column="followed_id" property="followedId" jdbcType="BIGINT"/>
+        <result column="follow_time" property="followTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <!-- 基础字段列表 -->
+    <sql id="Base_Column_List">
+        id, follower_id, followed_id, follow_time, update_time
+    </sql>
+
+    <!-- 插入关注关系 -->
+    <insert id="insert" parameterType="com.dlut.forumx.user.entity.UserFollow" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO user_follow (follower_id, followed_id, follow_time)
+        VALUES (#{followerId}, #{followedId}, #{followTime})
+    </insert>
+
+    <!-- 删除关注关系 -->
+    <delete id="delete">
+        DELETE FROM user_follow
+        WHERE follower_id = #{followerId} AND followed_id = #{followedId}
+    </delete>
+
+    <!-- 查询单个关注关系 -->
+    <select id="select" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM user_follow
+        WHERE follower_id = #{followerId} AND followed_id = #{followedId}
+    </select>
+
+    <!-- 查询粉丝ID列表（分页） -->
+    <select id="selectFollowers" resultType="java.lang.Long">
+        SELECT follower_id
+        FROM user_follow
+        WHERE followed_id = #{userId}
+        ORDER BY follow_time DESC
+        <if test="offset != null and limit != null">
+            LIMIT #{offset}, #{limit}
+        </if>
+    </select>
+
+    <!-- 查询关注ID列表（分页） -->
+    <select id="selectFollowing" resultType="java.lang.Long">
+        SELECT followed_id
+        FROM user_follow
+        WHERE follower_id = #{userId}
+        ORDER BY follow_time DESC
+        <if test="offset != null and limit != null">
+            LIMIT #{offset}, #{limit}
+        </if>
+    </select>
+
+    <!-- 统计粉丝数 -->
+    <select id="countFollowers" resultType="int">
+        SELECT COUNT(*)
+        FROM user_follow
+        WHERE followed_id = #{userId}
+    </select>
+
+    <!-- 统计关注数 -->
+    <select id="countFollowing" resultType="int">
+        SELECT COUNT(*)
+        FROM user_follow
+        WHERE follower_id = #{userId}
+    </select>
+
+    <!-- 批量查询关注关系 -->
+    <select id="selectFollowRelations" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM user_follow
+        WHERE follower_id = #{followerId}
+          AND followed_id IN
+        <foreach collection="targetIds" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
+</mapper>

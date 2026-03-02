@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dlut.forumx.user.mapper.UserSettingsMapper">
+
+    <!-- 实体映射 -->
+    <resultMap id="BaseResultMap" type="com.dlut.forumx.user.entity.UserSettings">
+        <id column="user_id" property="userId" jdbcType="BIGINT"/>
+        <result column="privacy_profile" property="privacyProfile" jdbcType="TINYINT"/>
+        <result column="privacy_post" property="privacyPost" jdbcType="TINYINT"/>
+        <result column="notification_like" property="notificationLike" jdbcType="TINYINT"/>
+        <result column="notification_comment" property="notificationComment" jdbcType="TINYINT"/>
+        <result column="notification_follow" property="notificationFollow" jdbcType="TINYINT"/>
+        <result column="notification_system" property="notificationSystem" jdbcType="TINYINT"/>
+        <result column="email_notify" property="emailNotify" jdbcType="TINYINT"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <!-- 基础字段列表 -->
+    <sql id="Base_Column_List">
+        user_id, privacy_profile, privacy_post, notification_like, notification_comment,
+        notification_follow, notification_system, email_notify, update_time
+    </sql>
+
+    <!-- 插入设置 -->
+    <insert id="insert" parameterType="com.dlut.forumx.user.entity.UserSettings">
+        INSERT INTO user_settings (
+            user_id, privacy_profile, privacy_post, notification_like, notification_comment,
+            notification_follow, notification_system, email_notify
+        ) VALUES (
+            #{userId}, #{privacyProfile}, #{privacyPost}, #{notificationLike}, #{notificationComment},
+            #{notificationFollow}, #{notificationSystem}, #{emailNotify}
+        )
+    </insert>
+
+    <!-- 初始化设置（默认值） -->
+    <insert id="initSettings">
+        INSERT INTO user_settings (
+            user_id, privacy_profile, privacy_post, notification_like, notification_comment,
+            notification_follow, notification_system, email_notify
+        ) VALUES (
+            #{userId}, 0, 0, 1, 1, 1, 1, 0
+        )
+    </insert>
+
+    <!-- 更新设置 -->
+    <update id="update" parameterType="com.dlut.forumx.user.entity.UserSettings">
+        UPDATE user_settings
+        <set>
+            <if test="privacyProfile != null">privacy_profile = #{privacyProfile},</if>
+            <if test="privacyPost != null">privacy_post = #{privacyPost},</if>
+            <if test="notificationLike != null">notification_like = #{notificationLike},</if>
+            <if test="notificationComment != null">notification_comment = #{notificationComment},</if>
+            <if test="notificationFollow != null">notification_follow = #{notificationFollow},</if>
+            <if test="notificationSystem != null">notification_system = #{notificationSystem},</if>
+            <if test="emailNotify != null">email_notify = #{emailNotify},</if>
+        </set>
+        WHERE user_id = #{userId}
+    </update>
+
+    <!-- 根据用户ID查询 -->
+    <select id="selectByUserId" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM user_settings
+        WHERE user_id = #{userId}
+    </select>
+
+</mapper>

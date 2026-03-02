@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dlut.forumx.user.mapper.UserStatsMapper">
+
+    <!-- 实体映射 -->
+    <resultMap id="BaseResultMap" type="com.dlut.forumx.user.entity.UserStats">
+        <id column="user_id" property="userId" jdbcType="BIGINT"/>
+        <result column="follow_count" property="followCount" jdbcType="INTEGER"/>
+        <result column="fans_count" property="fansCount" jdbcType="INTEGER"/>
+        <result column="post_count" property="postCount" jdbcType="INTEGER"/>
+        <result column="comment_count" property="commentCount" jdbcType="INTEGER"/>
+        <result column="like_count" property="likeCount" jdbcType="INTEGER"/>
+        <result column="favorite_count" property="favoriteCount" jdbcType="INTEGER"/>
+        <result column="view_count" property="viewCount" jdbcType="INTEGER"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <!-- 基础字段列表 -->
+    <sql id="Base_Column_List">
+        user_id, follow_count, fans_count, post_count, comment_count,
+        like_count, favorite_count, view_count, update_time
+    </sql>
+
+    <!-- 插入统计 -->
+    <insert id="insert" parameterType="com.dlut.forumx.user.entity.UserStats">
+        INSERT INTO user_stats (
+            user_id, follow_count, fans_count, post_count, comment_count,
+            like_count, favorite_count, view_count
+        ) VALUES (
+            #{userId}, #{followCount}, #{fansCount}, #{postCount}, #{commentCount},
+            #{likeCount}, #{favoriteCount}, #{viewCount}
+        )
+    </insert>
+
+    <!-- 初始化统计（所有计数为0） -->
+    <insert id="initStats">
+        INSERT INTO user_stats (user_id, follow_count, fans_count, post_count, 
+                               comment_count, like_count, favorite_count, view_count)
+        VALUES (#{userId}, 0, 0, 0, 0, 0, 0, 0)
+    </insert>
+
+    <!-- 更新统计 -->
+    <update id="update" parameterType="com.dlut.forumx.user.entity.UserStats">
+        UPDATE user_stats
+        <set>
+            <if test="followCount != null">follow_count = #{followCount},</if>
+            <if test="fansCount != null">fans_count = #{fansCount},</if>
+            <if test="postCount != null">post_count = #{postCount},</if>
+            <if test="commentCount != null">comment_count = #{commentCount},</if>
+            <if test="likeCount != null">like_count = #{likeCount},</if>
+            <if test="favoriteCount != null">favorite_count = #{favoriteCount},</if>
+            <if test="viewCount != null">view_count = #{viewCount},</if>
+        </set>
+        WHERE user_id = #{userId}
+    </update>
+
+    <!-- 根据用户ID查询 -->
+    <select id="selectByUserId" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM user_stats
+        WHERE user_id = #{userId}
+    </select>
+
+    <!-- 增加关注数 -->
+    <update id="incrFollowCount">
+        UPDATE user_stats
+        SET follow_count = follow_count + #{delta}
+        WHERE user_id = #{userId}
+    </update>
+
+    <!-- 增加粉丝数 -->
+    <update id="incrFansCount">
+        UPDATE user_stats
+        SET fans_count = fans_count + #{delta}
+        WHERE user_id = #{userId}
+    </update>
+
+    <!-- 增加发帖数 -->
+    <update id="incrPostCount">
+        UPDATE user_stats
+        SET post_count = post_count + 1
+        WHERE user_id = #{userId}
+    </update>
+
+    <!-- 增加评论数 -->
+    <update id="incrCommentCount">
+        UPDATE user_stats
+        SET comment_count = comment_count + 1
+        WHERE user_id = #{userId}
+    </update>
+
+    <!-- 增加获赞数 -->
+    <update id="incrLikeCount">
+        UPDATE user_stats
+        SET like_count = like_count + 1
+        WHERE user_id = #{userId}
+    </update>
+
+    <!-- 增加收藏数 -->
+    <update id="incrFavoriteCount">
+        UPDATE user_stats
+        SET favorite_count = favorite_count + 1
+        WHERE user_id = #{userId}
+    </update>
+
+    <!-- 增加浏览数 -->
+    <update id="incrViewCount">
+        UPDATE user_stats
+        SET view_count = view_count + 1
+        WHERE user_id = #{userId}
+    </update>
+
+</mapper>

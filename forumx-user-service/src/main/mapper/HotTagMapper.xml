@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dlut.forumx.user.mapper.HotTagMapper">
+
+    <!-- 实体映射 -->
+    <resultMap id="BaseResultMap" type="com.dlut.forumx.user.entity.HotTag">
+        <id column="tag_name" property="tagName" jdbcType="VARCHAR"/>
+        <result column="user_count" property="userCount" jdbcType="INTEGER"/>
+        <result column="post_count" property="postCount" jdbcType="INTEGER"/>
+        <result column="weight" property="weight" jdbcType="INTEGER"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <!-- 基础字段列表 -->
+    <sql id="Base_Column_List">
+        tag_name, user_count, post_count, weight, update_time
+    </sql>
+
+    <!-- 插入热门标签 -->
+    <insert id="insert" parameterType="com.dlut.forumx.user.entity.HotTag">
+        INSERT INTO hot_tag (tag_name, user_count, post_count, weight)
+        VALUES (#{tagName}, #{userCount}, #{postCount}, #{weight})
+    </insert>
+
+    <!-- 更新热门标签 -->
+    <update id="update" parameterType="com.dlut.forumx.user.entity.HotTag">
+        UPDATE hot_tag
+        <set>
+            <if test="userCount != null">user_count = #{userCount},</if>
+            <if test="postCount != null">post_count = #{postCount},</if>
+            <if test="weight != null">weight = #{weight},</if>
+        </set>
+        WHERE tag_name = #{tagName}
+    </update>
+
+    <!-- 增加用户计数 -->
+    <update id="incrUserCount">
+        UPDATE hot_tag
+        SET user_count = user_count + 1,
+            weight = weight + 1
+        WHERE tag_name = #{tagName}
+    </update>
+
+    <!-- 增加帖子计数 -->
+    <update id="incrPostCount">
+        UPDATE hot_tag
+        SET post_count = post_count + 1,
+            weight = weight + 1
+        WHERE tag_name = #{tagName}
+    </update>
+
+    <!-- 根据标签名查询 -->
+    <select id="selectByTagName" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM hot_tag
+        WHERE tag_name = #{tagName}
+    </select>
+
+    <!-- 查询热门标签列表 -->
+    <select id="selectHotTags" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM hot_tag
+        ORDER BY weight DESC
+        LIMIT #{limit}
+    </select>
+
+</mapper>
